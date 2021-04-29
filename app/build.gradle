@@ -57,6 +57,9 @@ dependencies {
     implementation 'nl.joery.animatedbottombar:library:1.0.9'
     implementation 'com.google.firebase:firebase-messaging:20.1.6'
 
+    //타임라인 라이브러리
+    implementation 'com.github.sangcomz:StickyTimeLine:v0.1.1'
+
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'

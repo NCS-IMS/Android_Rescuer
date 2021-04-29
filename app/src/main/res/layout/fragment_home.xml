@@ -45,7 +45,6 @@
         app:layout_constraintStart_toStartOf="@id/home_guideline3"
         app:layout_constraintEnd_toEndOf="@id/home_guideline4">
 
-
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">

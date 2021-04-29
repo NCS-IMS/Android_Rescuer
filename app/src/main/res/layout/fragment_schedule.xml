@@ -8,18 +8,43 @@
     android:clickable="true"
     tools:context=".ui.schedule.ScheduleFragment">
 
-    <TextView
-        android:id="@+id/text_dashboard"
-        android:layout_width="match_parent"
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/schedule_guideline1"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:text="fsdfsdfsd"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.05"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/schedule_guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.85"/>
+
+    <xyz.sangcomz.stickytimelineview.TimeLineRecyclerView
+        android:id="@+id/rescuer_schedule"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@drawable/card_border"
+        android:layout_marginHorizontal="20dp"
+        app:timeLineColor="#2196F3"
+        app:timeLineDotColor="#2196F3"
+        app:timeLineDotRadius="4dp"
+        app:timeLineDotStrokeColor="#ffffff"
+        app:timeLineDotStrokeSize="2dp"
+        app:timeLineMode="vertical"
+        app:timeLineWidth="4dp"
+        app:layout_constraintBottom_toTopOf="@id/schedule_guideline2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/schedule_guideline1"/>
+
+    <TextView
+        android:id="@+id/tempView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="?attr/actionBarSize"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
