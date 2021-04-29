@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "744862265315",
+    "project_id": "ncs-ims",
+    "storage_bucket": "ncs-ims.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:744862265315:android:9044f94e40e925c4397ad6",
+        "android_client_info": {
+          "package_name": "com.ncs.ims_rescuer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "744862265315-810p86upokd2pa4f613848ud6dscjr97.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCJJ56Qb-5emGk_CTihJlzStHe9pYBYjFs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "744862265315-810p86upokd2pa4f613848ud6dscjr97.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
