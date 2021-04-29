@@ -1,4 +1,4 @@
-package com.ncs.ims_rescuer.ui.dashboard
+package com.ncs.ims_rescuer.ui.schedule
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,20 +10,20 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.ncs.ims_rescuer.R
 
-class DashboardFragment : Fragment() {
+class ScheduleFragment : Fragment() {
 
-    private lateinit var dashboardViewModel: DashboardViewModel
+    private lateinit var scheduleViewModel: ScheduleViewModel
 
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        dashboardViewModel =
-                ViewModelProvider(this).get(DashboardViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_dashboard, container, false)
+        scheduleViewModel =
+                ViewModelProvider(this).get(ScheduleViewModel::class.java)
+        val root = inflater.inflate(R.layout.fragment_schedule, container, false)
         val textView: TextView = root.findViewById(R.id.text_dashboard)
-        dashboardViewModel.text.observe(viewLifecycleOwner, Observer {
+        scheduleViewModel.text.observe(viewLifecycleOwner, Observer {
             textView.text = it
         })
         return root

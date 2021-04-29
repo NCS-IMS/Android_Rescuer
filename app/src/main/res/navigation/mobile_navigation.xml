@@ -12,10 +12,10 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.ncs.ims_rescuer.ui.dashboard.DashboardFragment"
+        android:id="@+id/navigation_schedule"
+        android:name="com.ncs.ims_rescuer.ui.schedule.ScheduleFragment"
         android:label="@string/title_schedule"
-        tools:layout="@layout/fragment_dashboard" />
+        tools:layout="@layout/fragment_schedule" />
 
     <fragment
         android:id="@+id/navigation_notifications"

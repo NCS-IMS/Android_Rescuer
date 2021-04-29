@@ -30,6 +30,11 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    apply plugin: 'kotlin-kapt'
+    buildFeatures {
+        dataBinding true
+        viewBinding true
+    }
 }
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'

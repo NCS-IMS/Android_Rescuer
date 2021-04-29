@@ -8,6 +8,10 @@ import android.util.Log
 import android.view.Menu
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.get
+import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -15,29 +19,29 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.messaging.FirebaseMessaging
+import com.ncs.ims_rescuer.databinding.ActivityMainBinding
+import com.ncs.ims_rescuer.ui.home.HomeFragment
+import com.ncs.ims_rescuer.ui.notifications.NotificationsFragment
+import com.ncs.ims_rescuer.ui.schedule.ScheduleFragment
 import nl.joery.animatedbottombar.AnimatedBottomBar
 
-class MainActivity : AppCompatActivity() {
-    private lateinit var navController: NavController
-    private lateinit var navView: AnimatedBottomBar
+class MainActivity : AppCompatActivity(), AnimatedBottomBar.OnTabInterceptListener{
+
+
+    lateinit var mainBinding: ActivityMainBinding
+    lateinit var fragmentManager:FragmentManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        navView = findViewById(R.id.nav_view)
-        navController = findNavController(R.id.nav_host_fragment)
+        mainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+
+
+
+        mainBinding.navView.setOnTabInterceptListener(this)
         initFirebase()
         setNotificationChannel()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.bottom_nav_menu, menu)
-        navView.setupWithNavController(menu!!, navController)
-        return true
-    }
-    override fun onSupportNavigateUp(): Boolean {
-        navController.navigateUp()
-        return true
-    }
     private fun initFirebase() {
         FirebaseInstanceId.getInstance().instanceId
             .addOnCompleteListener { task ->
@@ -69,5 +73,27 @@ class MainActivity : AppCompatActivity() {
             )
             notificationManager.createNotificationChannel(channel)
         }
+    }
+
+    override fun onTabIntercepted(lastIndex: Int,lastTab: AnimatedBottomBar.Tab?,newIndex: Int,newTab: AnimatedBottomBar.Tab): Boolean {
+        var fragment = Fragment()
+        when(newTab.id){
+            R.id.navigation_home->{
+                fragment = HomeFragment()
+            }
+            R.id.navigation_schedule->{
+                fragment = ScheduleFragment()
+            }
+            R.id.navigation_notifications->{
+                fragment = NotificationsFragment()
+            }
+        }
+        if(fragment != null){
+            fragmentManager = supportFragmentManager
+            fragmentManager.beginTransaction().replace(R.id.nav_host_fragment, fragment).commit()
+        }else{
+            Log.e("Fragment Create Error", "Error in Creating Fragment")
+        }
+        return true
     }
 }
