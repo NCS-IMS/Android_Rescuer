@@ -1,13 +1,12 @@
 package com.ncs.ims_rescuer.ui.schedule
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
+import com.ncs.ims_rescuer.HTTPManager.RepositoryManager.ScheduleRepository
 
-class ScheduleViewModel : ViewModel() {
+class ScheduleViewModel(application: Application) : AndroidViewModel(application){
+    var mApplication = application
+    private val scheduleRepository = ScheduleRepository(application)
+    val scheduleList = scheduleRepository.scheduleList()
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is dashboard Fragment"
-    }
-    val text: LiveData<String> = _text
 }
