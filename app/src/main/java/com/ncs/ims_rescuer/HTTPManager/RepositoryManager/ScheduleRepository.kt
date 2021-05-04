@@ -18,18 +18,18 @@ class ScheduleRepository(application: Application) {
     var mApplication = application
     private val retrofit : Retrofit = RetrofitAPI.getInstance(Tools().EMERGENCY_URL)
     private val service = retrofit.create(RetrofitInterface::class.java)
-
+    val message =  MutableLiveData<String>()
     fun scheduleList(): LiveData<List<ScheduleData>>{
         var info = hashMapOf<String, String>(
-            "id" to "sdfsdfds"
+            "kakaoId" to "16946439391"
         )
         val data = MutableLiveData<List<ScheduleData>>()
         service.getSchedule(info).enqueue(object : Callback<ScheduleDTO> {
             override fun onResponse(call: Call<ScheduleDTO>, response: Response<ScheduleDTO>) {
                 if (response.isSuccessful) {
-                    data.value = response.body()!!.scheduleData
-                } else {
-
+                    data.value = response.body()?.result
+                }else if(response.code() == 500) {
+                    message.value = response.body()?.message.toString()
                 }
             }
             override fun onFailure(call: Call<ScheduleDTO>, t: Throwable) {

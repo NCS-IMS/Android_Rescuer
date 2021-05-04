@@ -1,11 +1,13 @@
 package com.ncs.ims_rescuer.ui.schedule
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.ncs.ims_rescuer.R
 import com.ncs.ims_rescuer.databinding.FragmentScheduleBinding
@@ -21,9 +23,25 @@ class ScheduleFragment : Fragment() {
 
         scheduleBinding.scheduleViewModel = scheduleViewModel
         scheduleBinding.lifecycleOwner = this
-        scheduleViewModel.scheduleList
+
+        getScheduleViewModel()
 
         return scheduleBinding.root
+    }
+
+    fun getScheduleViewModel(){
+        scheduleViewModel.scheduleList().observe(requireActivity(), Observer {
+            if (!it.isNullOrEmpty()){
+                for(i in it){
+                    Log.e("dsf", i.car_num)
+                }
+            }else{
+                scheduleViewModel.scheduleMessage().observe(requireActivity(), Observer {
+                    Log.e("sdfd", it.toString())
+                })
+            }
+
+        })
     }
 
 }
