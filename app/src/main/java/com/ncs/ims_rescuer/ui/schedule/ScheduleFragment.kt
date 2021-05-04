@@ -35,12 +35,10 @@ class ScheduleFragment : Fragment() {
                 for(i in it){
                     Log.e("dsf", i.car_num)
                 }
-            }else{
-                scheduleViewModel.scheduleMessage().observe(requireActivity(), Observer {
-                    Log.e("sdfd", it.toString())
-                })
             }
-
+        })
+        scheduleViewModel.scheduleMessage().observe(requireActivity(), Observer {
+            Log.e("sdfd", it.toString())
         })
     }
 

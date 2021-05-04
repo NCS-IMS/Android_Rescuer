@@ -26,10 +26,10 @@ class ScheduleRepository(application: Application) {
         val data = MutableLiveData<List<ScheduleData>>()
         service.getSchedule(info).enqueue(object : Callback<ScheduleDTO> {
             override fun onResponse(call: Call<ScheduleDTO>, response: Response<ScheduleDTO>) {
-                if (response.isSuccessful) {
+                if (response.code() == 200) {
                     data.value = response.body()?.result
-                }else if(response.code() == 500) {
-                    message.value = response.body()?.message.toString()
+                }else{
+                    message.value = response.body()?.message
                 }
             }
             override fun onFailure(call: Call<ScheduleDTO>, t: Throwable) {
