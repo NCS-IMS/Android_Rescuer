@@ -30,14 +30,14 @@ class ScheduleFragment : Fragment() {
     }
 
     fun getScheduleViewModel(){
-        scheduleViewModel.scheduleList().observe(requireActivity(), Observer {
+        scheduleViewModel.scheduleList().observe(viewLifecycleOwner, Observer {
             if (!it.isNullOrEmpty()){
                 for(i in it){
                     Log.e("dsf", i.car_num)
                 }
             }
         })
-        scheduleViewModel.scheduleMessage().observe(requireActivity(), Observer {
+        scheduleViewModel.scheduleMessage().observe(viewLifecycleOwner, Observer {
             Log.e("sdfd", it.toString())
         })
     }
