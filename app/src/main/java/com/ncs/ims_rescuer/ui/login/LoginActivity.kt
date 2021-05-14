@@ -52,8 +52,6 @@ class LoginActivity : AppCompatActivity() {
                 var expireAt = oAuthLogin.getExpiresAt(this@LoginActivity)
                 var tokenType = oAuthLogin.getTokenType(this@LoginActivity)
                 getUserInfo(accessToken)
-                startActivity(Intent(this@LoginActivity, MainActivity::class.java))
-                finish()
             }else{
                 var errorCode = oAuthLogin.getLastErrorCode(this@LoginActivity).code
                 var errorDesc = oAuthLogin.getLastErrorDesc(this@LoginActivity)

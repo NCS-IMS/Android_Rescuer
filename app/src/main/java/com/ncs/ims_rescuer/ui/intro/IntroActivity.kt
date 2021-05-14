@@ -8,6 +8,8 @@ import android.util.Log
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import com.ncs.imsUser.SaveDataManager.UserInfoData
+import com.ncs.ims_rescuer.HTTPManager.DTOManager.UserInfoDetail
 import com.ncs.ims_rescuer.ui.login.LoginActivity
 import com.ncs.ims_rescuer.MainActivity
 import com.ncs.ims_rescuer.OAthManager.NaverOAthUtil
@@ -20,6 +22,8 @@ class IntroActivity : AppCompatActivity() {
     lateinit var oAuthLogin: OAuthLogin
     lateinit var introBinding: ActivityIntroBinding
     lateinit var introViewModel: IntroViewModel
+    lateinit var userInfoData: UserInfoData
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         introBinding = DataBindingUtil.setContentView(this, R.layout.activity_intro)
@@ -28,6 +32,12 @@ class IntroActivity : AppCompatActivity() {
         introBinding.introViewModel = introViewModel
         introBinding.lifecycleOwner = this
 
+        userInfoData = UserInfoData(this)
+
+        init()
+    }
+
+    fun init(){
         oAuthLogin = OAuthLogin.getInstance()
         var loginUtil = NaverOAthUtil()
 
@@ -44,7 +54,6 @@ class IntroActivity : AppCompatActivity() {
                 var expireAt = oAuthLogin.getExpiresAt(this@IntroActivity)
                 var tokenType = oAuthLogin.getTokenType(this@IntroActivity)
                 getUserInfo(accessToken)
-
             }else{
                 var errorCode = oAuthLogin.getLastErrorCode(this@IntroActivity).code
                 var errorDesc = oAuthLogin.getLastErrorDesc(this@IntroActivity)
@@ -59,11 +68,21 @@ class IntroActivity : AppCompatActivity() {
         var Token = "Bearer $accessToken"
         introViewModel.userInfo(Token).observe(this, {
             Log.e("userName", it.name)
-            var intent = Intent(this@IntroActivity, MainActivity::class.java)
-            intent.putExtra("username", it.name)
-            intent.putExtra("userphoto", it.profile_image)
-            startActivity(intent)
+            saveInfo(it)
+            startActivity(Intent(this@IntroActivity, MainActivity::class.java))
             finish()
         })
+    }
+
+    //로그인 사용자 정보 저장
+    fun saveInfo(data : UserInfoDetail){
+        userInfoData.setUserID(data.id)
+        userInfoData.setName(data.name)
+        userInfoData.setPhone(data.mobile)
+        userInfoData.setProfileImg(data.profile_image)
+        userInfoData.setGender(data.gender)
+        userInfoData.setEmail(data.email)
+        userInfoData.setBirthday(data.birthday)
+        userInfoData.setBirthYear(data.birthyear)
     }
 }
