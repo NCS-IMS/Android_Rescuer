@@ -134,6 +134,7 @@
                         app:layout_constraintTop_toBottomOf="@id/home_guideline5"/>
 
                     <ImageView
+                        android:id="@+id/logoutBtn"
                         android:layout_width="70dp"
                         android:layout_height="70dp"
                         android:src="@drawable/firefight_logo"

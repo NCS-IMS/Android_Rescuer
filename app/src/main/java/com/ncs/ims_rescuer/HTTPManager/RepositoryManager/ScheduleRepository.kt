@@ -21,12 +21,13 @@ class ScheduleRepository(application: Application) {
     val message =  MutableLiveData<String>()
     fun scheduleList(): LiveData<List<ScheduleData>>{
         var info = hashMapOf<String, String>(
-            "kakaoId" to "16946439391"
+            "kakaoId" to "1694643939"
         )
         val data = MutableLiveData<List<ScheduleData>>()
         service.getSchedule(info).enqueue(object : Callback<ScheduleDTO> {
             override fun onResponse(call: Call<ScheduleDTO>, response: Response<ScheduleDTO>) {
                 if (response.code() == 200) {
+                    Log.e("dfsd", response.body().toString())
                     data.value = response.body()?.result
                 }else{
                     message.value = response.body()?.message

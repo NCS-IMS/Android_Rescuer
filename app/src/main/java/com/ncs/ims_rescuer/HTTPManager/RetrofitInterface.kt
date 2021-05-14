@@ -9,7 +9,7 @@ import retrofit2.http.Header
 import retrofit2.http.POST
 
 interface RetrofitInterface{
-    @POST("schedule/find/one")
+    @POST("/schedule/find/one")
     fun getSchedule(@Body data: HashMap<String, String>): Call<ScheduleDTO>
 
     @GET("/v1/nid/me")

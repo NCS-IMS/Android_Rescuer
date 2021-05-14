@@ -10,6 +10,7 @@ object RetrofitAPI {
     private val gson = GsonBuilder().setLenient().create()
 
     fun getInstance(url : String):Retrofit{
+        retrofit = null
         if(retrofit == null){
             retrofit = Retrofit.Builder()
                 .baseUrl(url)

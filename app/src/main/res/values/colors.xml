@@ -9,4 +9,6 @@
     <color name="white">#FFFFFFFF</color>
     <color name="default_color">#5893ce</color>
     <color name="backColor">#221e18</color>
+    <color name="customPurple">#B600CA</color>
+    <color name="schedule_background">#f8f8f8</color>
 </resources>

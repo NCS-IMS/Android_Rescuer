@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="2dp"
+        android:background="@color/schedule_background"
+        app:cardCornerRadius="10dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/scheduleTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="오전 스케줄"
+                    android:textColor="@color/black"
+                    android:layout_alignParentStart="true"
+                    android:textSize="18dp"/>
+
+                <com.airbnb.lottie.LottieAnimationView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_toLeftOf="@id/carNumTxt"
+                    android:layout_marginRight="10dp"
+                    android:layout_centerVertical="true"
+                    app:lottie_loop="true"
+                    app:lottie_autoPlay="true"
+                    app:lottie_rawRes="@raw/ambulance"/>
+
+                <TextView
+                    android:id="@+id/carNumTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="123차 5555"
+                    android:textColor="@color/black"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:textSize="15dp"/>
+
+            </RelativeLayout>
+
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp">
+
+                <TextView
+                    android:id="@+id/startTimeTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="시작 시간"
+                    android:textSize="12dp"
+                    android:textColor="@color/customPurple"/>
+
+                <TextView
+                    android:id="@+id/startTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="202115616"
+                    android:layout_toRightOf="@id/startTimeTxt"
+                    android:textColor="@color/black"
+                    android:textSize="12dp"
+                    android:layout_alignBaseline="@id/startTimeTxt"
+                    android:layout_marginLeft="10dp"/>
+
+                <TextView
+                    android:id="@+id/endTimeTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:textSize="12dp"
+                    android:textColor="@color/customPurple"
+                    android:text="종료 시간"
+                    android:layout_below="@id/startTimeTxt"/>
+
+                <TextView
+                    android:id="@+id/endTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="202115616"
+                    android:textColor="@color/black"
+                    android:textSize="12dp"
+                    android:layout_toRightOf="@id/endTimeTxt"
+                    android:layout_alignBaseline="@id/endTimeTxt"
+                    android:layout_marginLeft="10dp"/>
+
+
+            </RelativeLayout>
+
+
+
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</layout>
