@@ -55,6 +55,8 @@ dependencies {
 
     //Bottom Bar Library
     implementation 'nl.joery.animatedbottombar:library:1.0.9'
+
+    //FCM Library
     implementation 'com.google.firebase:firebase-messaging:20.1.6'
 
     //타임라인 라이브러리
@@ -70,6 +72,9 @@ dependencies {
 
     //네이버 로그인
     implementation 'com.naver.nid:naveridlogin-android-sdk:4.2.6'
+
+    //받은데이터 암호화 후 저장
+    implementation 'com.pddstudio:encrypted-preferences:1.3.0'
 
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'

@@ -8,7 +8,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
-import com.ncs.ims_rescuer.LoginActivity
+import com.ncs.ims_rescuer.ui.login.LoginActivity
 import com.ncs.ims_rescuer.MainActivity
 import com.ncs.ims_rescuer.OAthManager.NaverOAthUtil
 import com.ncs.ims_rescuer.R
@@ -43,11 +43,8 @@ class IntroActivity : AppCompatActivity() {
                 var refreshToken = oAuthLogin.getRefreshToken(this@IntroActivity)
                 var expireAt = oAuthLogin.getExpiresAt(this@IntroActivity)
                 var tokenType = oAuthLogin.getTokenType(this@IntroActivity)
-                Log.e("token", accessToken)
-                Log.e("expireAt",expireAt.toString())
                 getUserInfo(accessToken)
-                startActivity(Intent(this@IntroActivity, MainActivity::class.java))
-                finish()
+
             }else{
                 var errorCode = oAuthLogin.getLastErrorCode(this@IntroActivity).code
                 var errorDesc = oAuthLogin.getLastErrorDesc(this@IntroActivity)
@@ -62,6 +59,11 @@ class IntroActivity : AppCompatActivity() {
         var Token = "Bearer $accessToken"
         introViewModel.userInfo(Token).observe(this, {
             Log.e("userName", it.name)
+            var intent = Intent(this@IntroActivity, MainActivity::class.java)
+            intent.putExtra("username", it.name)
+            intent.putExtra("userphoto", it.profile_image)
+            startActivity(intent)
+            finish()
         })
     }
 }

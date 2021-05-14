@@ -14,7 +14,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 
-class IntroRepository(application: Application) {
+class UserRepository(application: Application) {
     private val retrofit : Retrofit = RetrofitAPI.getInstance(Tools().NAVER_LOGIN_URL)
     private val service = retrofit.create(RetrofitInterface::class.java)
     val message =  MutableLiveData<String>()
