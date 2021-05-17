@@ -1,7 +1,9 @@
 package com.ncs.ims_rescuer
 
+import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.bluetooth.BluetoothAdapter
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -19,6 +21,8 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.messaging.FirebaseMessaging
+import com.ncs.imsUser.SaveDataManager.UserInfoData
+import com.ncs.ims_rescuer.SaveDataManager.ApplicationSetting
 import com.ncs.ims_rescuer.databinding.ActivityMainBinding
 import com.ncs.ims_rescuer.ui.home.HomeFragment
 import com.ncs.ims_rescuer.ui.notifications.NotificationsFragment
@@ -30,14 +34,18 @@ class MainActivity : AppCompatActivity(), AnimatedBottomBar.OnTabInterceptListen
 
     lateinit var mainBinding: ActivityMainBinding
     lateinit var fragmentManager:FragmentManager
+    lateinit var appSetting : ApplicationSetting
+    lateinit var userInfoData: UserInfoData
 
+    @SuppressLint("HardwareIds")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-
-
-
         mainBinding.navView.setOnTabInterceptListener(this)
+
+        appSetting = ApplicationSetting(this)
+        userInfoData = UserInfoData(this)
+
         initFirebase()
         setNotificationChannel()
     }
@@ -54,6 +62,7 @@ class MainActivity : AppCompatActivity(), AnimatedBottomBar.OnTabInterceptListen
                 FirebaseMessaging.getInstance().subscribeToTopic(resources.getString(R.string.default_notification_channel_name))
                 // Log and toast
                 Log.d("Firebase", token)
+                appSetting.setFCMToken(token) // FCM 토큰 저장
             }
     }
 
@@ -73,6 +82,10 @@ class MainActivity : AppCompatActivity(), AnimatedBottomBar.OnTabInterceptListen
             )
             notificationManager.createNotificationChannel(channel)
         }
+    }
+
+    fun setUserData(fcmToken: String, mac : String){
+
     }
 
     override fun onTabIntercepted(lastIndex: Int,lastTab: AnimatedBottomBar.Tab?,newIndex: Int,newTab: AnimatedBottomBar.Tab): Boolean {
@@ -96,4 +109,6 @@ class MainActivity : AppCompatActivity(), AnimatedBottomBar.OnTabInterceptListen
         }
         return true
     }
+
+
 }

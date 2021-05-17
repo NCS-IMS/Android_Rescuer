@@ -1,19 +1,25 @@
 package com.ncs.ims_rescuer.ui.intro
 
 import android.annotation.SuppressLint
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Intent
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import com.google.firebase.iid.FirebaseInstanceId
+import com.google.firebase.messaging.FirebaseMessaging
 import com.ncs.imsUser.SaveDataManager.UserInfoData
 import com.ncs.ims_rescuer.HTTPManager.DTOManager.UserInfoDetail
 import com.ncs.ims_rescuer.ui.login.LoginActivity
 import com.ncs.ims_rescuer.MainActivity
 import com.ncs.ims_rescuer.OAthManager.NaverOAthUtil
 import com.ncs.ims_rescuer.R
+import com.ncs.ims_rescuer.SaveDataManager.ApplicationSetting
 import com.ncs.ims_rescuer.databinding.ActivityIntroBinding
 import com.nhn.android.naverlogin.OAuthLogin
 import com.nhn.android.naverlogin.OAuthLoginHandler
@@ -23,6 +29,7 @@ class IntroActivity : AppCompatActivity() {
     lateinit var introBinding: ActivityIntroBinding
     lateinit var introViewModel: IntroViewModel
     lateinit var userInfoData: UserInfoData
+    lateinit var appSetting : ApplicationSetting
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,6 +40,7 @@ class IntroActivity : AppCompatActivity() {
         introBinding.lifecycleOwner = this
 
         userInfoData = UserInfoData(this)
+        appSetting = ApplicationSetting(this)
 
         init()
     }
@@ -67,8 +75,10 @@ class IntroActivity : AppCompatActivity() {
     fun getUserInfo(accessToken : String){
         var Token = "Bearer $accessToken"
         introViewModel.userInfo(Token).observe(this, {
-            Log.e("userName", it.name)
-            saveInfo(it)
+            if(!appSetting.getSetting()["first"].toBoolean()) {
+                appSetting.setFirstCheck(true)
+                saveInfo(it)
+            }
             startActivity(Intent(this@IntroActivity, MainActivity::class.java))
             finish()
         })

@@ -1,5 +1,6 @@
 package com.ncs.ims_rescuer.ui.login
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -13,6 +14,7 @@ import com.ncs.ims_rescuer.HTTPManager.DTOManager.UserInfoDetail
 import com.ncs.ims_rescuer.MainActivity
 import com.ncs.ims_rescuer.OAthManager.NaverOAthUtil
 import com.ncs.ims_rescuer.R
+import com.ncs.ims_rescuer.SaveDataManager.ApplicationSetting
 import com.ncs.ims_rescuer.databinding.ActivityLoginBinding
 import com.nhn.android.naverlogin.OAuthLogin
 import com.nhn.android.naverlogin.OAuthLoginHandler
@@ -21,8 +23,8 @@ class LoginActivity : AppCompatActivity() {
     lateinit var loginBinding: ActivityLoginBinding
     lateinit var loginViewModel: LoginViewModel
     lateinit var oAuthLogin: OAuthLogin
-
     lateinit var userInfoData:UserInfoData
+    lateinit var appSetting : ApplicationSetting
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,6 +35,7 @@ class LoginActivity : AppCompatActivity() {
         loginBinding.lifecycleOwner = this
 
         userInfoData = UserInfoData(this)
+        appSetting = ApplicationSetting(this)
 
         init()
     }
@@ -44,6 +47,7 @@ class LoginActivity : AppCompatActivity() {
         loginBinding.naverLogin.setOAuthLoginHandler(oAuthLoginHandler)
     }
 
+    @SuppressLint("HandlerLeak")
     private var oAuthLoginHandler = object : OAuthLoginHandler(){
         override fun run(state: Boolean) {
             if(state){
@@ -63,8 +67,10 @@ class LoginActivity : AppCompatActivity() {
     fun getUserInfo(accessToken : String){
         var Token = "Bearer $accessToken"
         loginViewModel.userInfo(Token).observe(this, {
-            Log.e("userName", it.name)
-            saveInfo(it)
+            if(!appSetting.getSetting()["first"].toBoolean()) {
+                appSetting.setFirstCheck(true)
+                saveInfo(it)
+            }
             startActivity(Intent(this@LoginActivity, MainActivity::class.java))
             finish()
         })

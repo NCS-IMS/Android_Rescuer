@@ -4,6 +4,8 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.ncs.imsUser.SaveDataManager.UserInfoData
+import com.ncs.ims_rescuer.HTTPManager.DTOManager.PublicDTO
 import com.ncs.ims_rescuer.HTTPManager.DTOManager.UserInfoDTO
 import com.ncs.ims_rescuer.HTTPManager.DTOManager.UserInfoDetail
 import com.ncs.ims_rescuer.HTTPManager.RetrofitAPI
@@ -14,7 +16,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 
-class UserRepository(application: Application) {
+class UserRepository(var application: Application) {
     private val retrofit : Retrofit = RetrofitAPI.getInstance(Tools().NAVER_LOGIN_URL)
     private val service = retrofit.create(RetrofitInterface::class.java)
     val message =  MutableLiveData<String>()
@@ -36,4 +38,19 @@ class UserRepository(application: Application) {
         })
         return data
     }
+
+    /*fun setUserData(fcmToken : String, mac : String):LiveData<PublicDTO>{
+        var userInfoData = UserInfoData(application)
+        var data = hashMapOf(
+                "id" to userInfoData.getUserData()["USER_ID"],
+                "gender" to if(userInfoData.getUserData()["gender"] == "M") "1" else "0",
+                "email" to userInfoData.getUserData()["EMAIL"],
+                "mobile" to userInfoData.getUserData()["PHONE"],
+                "name" to userInfoData.getUserData()["NAME"],
+                "birth" to "${userInfoData.getUserData()["BIRTHYEAR"]}-${userInfoData.getUserData()["BIRTHDAY"]}",
+                "mac" to mac,
+                "token" to fcmToken,
+                "firestationId" to ""
+        )
+    }*/
 }
