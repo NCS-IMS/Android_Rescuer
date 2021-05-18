@@ -1,5 +1,6 @@
 package com.ncs.ims_rescuer.ui.intro
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -13,6 +14,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.messaging.FirebaseMessaging
+import com.gun0912.tedpermission.PermissionListener
+import com.gun0912.tedpermission.TedPermission
 import com.ncs.imsUser.SaveDataManager.UserInfoData
 import com.ncs.ims_rescuer.HTTPManager.DTOManager.UserInfoDetail
 import com.ncs.ims_rescuer.ui.login.LoginActivity
@@ -42,7 +45,9 @@ class IntroActivity : AppCompatActivity() {
         userInfoData = UserInfoData(this)
         appSetting = ApplicationSetting(this)
 
-        init()
+        getPermission()
+
+
     }
 
     fun init(){
@@ -94,5 +99,29 @@ class IntroActivity : AppCompatActivity() {
         userInfoData.setEmail(data.email)
         userInfoData.setBirthday(data.birthday)
         userInfoData.setBirthYear(data.birthyear)
+    }
+
+    fun getPermission(){
+        var permission = object : PermissionListener {
+            override fun onPermissionGranted() {
+                init()
+            }
+            override fun onPermissionDenied(deniedPermissions: MutableList<String>?) {
+                finishAffinity()
+            }
+        }
+        TedPermission.with(this)
+            .setPermissionListener(permission)
+            .setRationaleTitle("권한 요청")
+            .setRationaleMessage("앱을 사용하기위해서는 권한 허용이 필요합니다!")
+            .setDeniedMessage("승인 거부 [설정] > [권한]에서 권한 승인 가능")
+            .setPermissions(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.BLUETOOTH,
+                Manifest.permission.BLUETOOTH_ADMIN,
+                Manifest.permission.READ_PHONE_STATE
+            )
+            .check()
     }
 }
