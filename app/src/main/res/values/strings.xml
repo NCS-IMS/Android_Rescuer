@@ -7,4 +7,6 @@
     <!-- push Message Service -->
     <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
     <string name="default_notification_channel_name" translatable="false">test</string>
+
+    <string name="kakao_app_key">c6ab6b684619048f988bc24225528003</string>
 </resources>

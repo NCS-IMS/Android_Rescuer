@@ -19,7 +19,7 @@ import java.util.*
 
 class ScheduleListAdapter(var context: Context, var scheduleList : List<ScheduleData>): RecyclerView.Adapter<ScheduleListAdapter.ScheduleListViewHolder>(){
     var formatDate = SimpleDateFormat("yyyy년 MM월 dd일 (E) hh시 mm분")
-    var getFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+    var getFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'") //DateTime 파싱부분
     var date = Date()
     inner class ScheduleListViewHolder(scheduleItemBinding: ScheduleItemBinding) : RecyclerView.ViewHolder(scheduleItemBinding.root) {
 

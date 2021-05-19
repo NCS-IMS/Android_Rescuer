@@ -16,6 +16,7 @@ import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.messaging.FirebaseMessaging
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.TedPermission
+import com.kakao.sdk.common.util.Utility
 import com.ncs.imsUser.SaveDataManager.UserInfoData
 import com.ncs.ims_rescuer.HTTPManager.DTOManager.UserInfoDetail
 import com.ncs.ims_rescuer.ui.login.LoginActivity
@@ -44,7 +45,8 @@ class IntroActivity : AppCompatActivity() {
 
         userInfoData = UserInfoData(this)
         appSetting = ApplicationSetting(this)
-
+        var keyHash = Utility.getKeyHash(this)
+        Log.e("hash", keyHash)
         getPermission()
 
 
