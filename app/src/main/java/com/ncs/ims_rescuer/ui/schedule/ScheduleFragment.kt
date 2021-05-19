@@ -16,11 +16,14 @@ import com.ncs.ims_rescuer.HTTPManager.DTOManager.ScheduleData
 import com.ncs.ims_rescuer.ItemAdapterManager.ScheduleListAdapter
 import com.ncs.ims_rescuer.R
 import com.ncs.ims_rescuer.databinding.FragmentScheduleBinding
+import com.vivekkaushik.datepicker.DatePickerTimeline
+import com.vivekkaushik.datepicker.OnDateSelectedListener
 import xyz.sangcomz.stickytimelineview.callback.SectionCallback
 import xyz.sangcomz.stickytimelineview.model.SectionInfo
 import java.text.SimpleDateFormat
+import java.util.*
 
-class ScheduleFragment : Fragment() {
+class ScheduleFragment : Fragment(){
 
     private lateinit var scheduleViewModel: ScheduleViewModel
     lateinit var scheduleBinding: FragmentScheduleBinding
@@ -32,15 +35,33 @@ class ScheduleFragment : Fragment() {
         scheduleBinding.scheduleViewModel = scheduleViewModel
         scheduleBinding.lifecycleOwner = this
         userInfoData = UserInfoData(requireContext())
-        scheduleBinding.userDateTimeline.setInitialDate(2021, 5, 19)
-        scheduleViewModel.scheduleList(userInfoData.getUserData()["USER_ID"].toString()).observe(viewLifecycleOwner, {
-            Log.e("fsddsfsd", it.toString())
-            setScheduleList(it)
+        scheduleBinding.userDateTimeline.setInitialDate(Calendar.getInstance()[Calendar.YEAR], Calendar.getInstance()[Calendar.MONTH], Calendar.getInstance()[Calendar.DATE])
+
+        scheduleBinding.userDateTimeline.setOnDateSelectedListener(object : OnDateSelectedListener{
+            override fun onDateSelected(year: Int, month: Int, day: Int, dayOfWeek: Int) {
+                var month = Integer.toString(month +1)
+                var day = Integer.toString(day)
+                if(Integer.parseInt(month)<10) month = "0${month}"
+                if(Integer.parseInt(day)<10) day = "0${day}"
+                var date = "${year}-${month}-${day}"
+                scheduleViewModel.scheduleList(userInfoData.getUserData()["USER_ID"].toString(), date).observe(viewLifecycleOwner, {
+                    setScheduleList(it)
+                })
+                scheduleViewModel.scheduleMessage().observe(viewLifecycleOwner,{
+                    if(!it.isNullOrEmpty()){
+                        scheduleBinding.scheduleList.removeAllViewsInLayout()
+                    }
+                })
+            }
+
+            override fun onDisabledDateSelected(year: Int, month: Int, day: Int, dayOfWeek: Int, isDisabled: Boolean) {}
         })
+
         return scheduleBinding.root
     }
 
     fun setScheduleList(scheduleList : List<ScheduleData>){
+        scheduleBinding.scheduleList.removeAllViewsInLayout()
         val linearManger = LinearLayoutManager(requireContext())
         var scheduleListAdapter = ScheduleListAdapter(requireContext(), scheduleList)
         scheduleBinding.scheduleList.adapter = scheduleListAdapter

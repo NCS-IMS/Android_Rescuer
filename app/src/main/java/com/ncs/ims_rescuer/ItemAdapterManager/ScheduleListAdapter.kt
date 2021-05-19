@@ -1,21 +1,25 @@
 package com.ncs.ims_rescuer.ItemAdapterManager
 
 import android.content.Context
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.LayoutRes
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.ncs.ims_rescuer.HTTPManager.DTOManager.ScheduleData
 import com.ncs.ims_rescuer.databinding.ScheduleItemBinding
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 class ScheduleListAdapter(var context: Context, var scheduleList : List<ScheduleData>): RecyclerView.Adapter<ScheduleListAdapter.ScheduleListViewHolder>(){
-    var format = SimpleDateFormat("yyyy-MM-dd")
-    var formatTitle = SimpleDateFormat("yyyy년 MM월 dd일 (E)")
-    var formatDate = SimpleDateFormat("yyyy년 MM월 dd일 (E) HH시 mm분")
+    var formatDate = SimpleDateFormat("yyyy년 MM월 dd일 (E) hh시 mm분")
+    var getFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     var date = Date()
     inner class ScheduleListViewHolder(scheduleItemBinding: ScheduleItemBinding) : RecyclerView.ViewHolder(scheduleItemBinding.root) {
 
@@ -27,9 +31,9 @@ class ScheduleListAdapter(var context: Context, var scheduleList : List<Schedule
         fun bind(scheduleData: ScheduleData, context: Context){
             scheduleTitle.text = scheduleData.notice
             carNumTxt.text = scheduleData.car_num
-            date = format.parse(scheduleData.startDate)
+            date = getFormat.parse(scheduleData.startDate)
             startTxt.text = formatDate.format(date)
-            date = format.parse(scheduleData.endDate)
+            date = getFormat.parse(scheduleData.endDate)
             endTxt.text = formatDate.format(date)
         }
     }

@@ -11,8 +11,8 @@ class ScheduleViewModel(application: Application) : AndroidViewModel(application
     private val scheduleRepository = ScheduleRepository(application)
     var scheduleMessage = scheduleRepository.message
 
-    fun scheduleList(userId : String): LiveData<List<ScheduleData>>{
-        return scheduleRepository.scheduleList(userId)
+    fun scheduleList(userId : String, date : String): LiveData<List<ScheduleData>>{
+        return scheduleRepository.scheduleList(userId, date)
     }
 
     fun scheduleMessage(): LiveData<String>{
