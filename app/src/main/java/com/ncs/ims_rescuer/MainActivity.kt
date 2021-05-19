@@ -155,6 +155,7 @@ class MainActivity : AppCompatActivity(), AnimatedBottomBar.OnTabInterceptListen
         var byt_arr = userInfoData.getUserData()["USER_ID"]!!.toByteArray(charSet)
         val data_uuid = UUID.nameUUIDFromBytes(byt_arr)
         Log.e("UUID", data_uuid.toString())
+        Log.e("userid", userInfoData.getUserData()["USER_ID"]!!)
         return data_uuid.toString()
     }
 

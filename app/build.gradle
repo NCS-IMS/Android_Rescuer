@@ -85,6 +85,9 @@ dependencies {
     //권한 설정 통합 라이브러리
     implementation 'gun0912.ted:tedpermission:2.2.2'
 
+    //타임 피커
+    implementation 'com.vivekkaushik.datepicker:datePickerTimeline:0.0.4'
+
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'

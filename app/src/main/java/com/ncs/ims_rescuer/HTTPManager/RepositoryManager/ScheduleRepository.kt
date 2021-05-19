@@ -19,9 +19,9 @@ class ScheduleRepository(application: Application) {
     private val retrofit : Retrofit = RetrofitAPI.getInstance(Tools().EMERGENCY_URL)
     private val service = retrofit.create(RetrofitInterface::class.java)
     val message =  MutableLiveData<String>()
-    fun scheduleList(): LiveData<List<ScheduleData>>{
+    fun scheduleList(userId : String): LiveData<List<ScheduleData>>{
         var info = hashMapOf<String, String>(
-            "kakaoId" to "1694643939"
+            "kakaoId" to userId
         )
         val data = MutableLiveData<List<ScheduleData>>()
         service.getSchedule(info).enqueue(object : Callback<ScheduleDTO> {

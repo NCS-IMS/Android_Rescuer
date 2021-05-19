@@ -9,11 +9,10 @@ import com.ncs.ims_rescuer.HTTPManager.RepositoryManager.ScheduleRepository
 class ScheduleViewModel(application: Application) : AndroidViewModel(application){
     var mApplication = application
     private val scheduleRepository = ScheduleRepository(application)
-    var scheduleList = scheduleRepository.scheduleList()
     var scheduleMessage = scheduleRepository.message
 
-    fun scheduleList(): LiveData<List<ScheduleData>>{
-        return scheduleList
+    fun scheduleList(userId : String): LiveData<List<ScheduleData>>{
+        return scheduleRepository.scheduleList(userId)
     }
 
     fun scheduleMessage(): LiveData<String>{
