@@ -16,13 +16,14 @@ import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapView
 
-class NotificationsFragment : Fragment(), MapView.MapViewEventListener {
+class NotificationsFragment : Fragment(), MapView.MapViewEventListener, View.OnClickListener {
 
     private lateinit var notificationsViewModel: NotificationsViewModel
     private lateinit var notificationsBinding: FragmentNotificationsBinding
     lateinit var map_view : MapView
     lateinit var marker : MapPOIItem
     lateinit var gps : HashMap<String, Double>
+    var expened = false
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         notificationsViewModel = ViewModelProvider(this).get(NotificationsViewModel::class.java)
         notificationsBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_notifications, container, false)
@@ -34,6 +35,7 @@ class NotificationsFragment : Fragment(), MapView.MapViewEventListener {
         map_view = MapView(requireActivity())
         notificationsBinding.mapView.addView(map_view)
         setCurrentLocation()
+        notificationsBinding.userCard.setOnClickListener(this)
         return notificationsBinding.root
     }
     //위치 마커 기능
@@ -56,36 +58,27 @@ class NotificationsFragment : Fragment(), MapView.MapViewEventListener {
         map_view.addPOIItem(marker)
     }*/
 
-    override fun onMapViewInitialized(p0: MapView?) {
+    override fun onClick(v: View?) {
+        when(v?.id){
+            notificationsBinding.userCard.id ->{
+                if(!expened){
+                    notificationsBinding.expandedLayout.visibility = View.VISIBLE
+                    expened = !expened
+                }else{
+                    notificationsBinding.expandedLayout.visibility = View.GONE
+                    expened = !expened
+                }
+            }
+        }
     }
 
-    override fun onMapViewCenterPointMoved(p0: MapView?, p1: MapPoint?) {
-    }
-
-    override fun onMapViewZoomLevelChanged(p0: MapView?, p1: Int) {
-    }
-
-    override fun onMapViewSingleTapped(p0: MapView?, p1: MapPoint?) {
-
-    }
-
-    override fun onMapViewDoubleTapped(p0: MapView?, p1: MapPoint?) {
-
-    }
-
-    override fun onMapViewLongPressed(p0: MapView?, p1: MapPoint?) {
-
-    }
-
-    override fun onMapViewDragStarted(p0: MapView?, p1: MapPoint?) {
-
-    }
-
-    override fun onMapViewDragEnded(p0: MapView?, p1: MapPoint?) {
-
-    }
-
-    override fun onMapViewMoveFinished(p0: MapView?, p1: MapPoint?) {
-
-    }
+    override fun onMapViewInitialized(p0: MapView?) {}
+    override fun onMapViewCenterPointMoved(p0: MapView?, p1: MapPoint?) {}
+    override fun onMapViewZoomLevelChanged(p0: MapView?, p1: Int) {}
+    override fun onMapViewSingleTapped(p0: MapView?, p1: MapPoint?) {}
+    override fun onMapViewDoubleTapped(p0: MapView?, p1: MapPoint?) {}
+    override fun onMapViewLongPressed(p0: MapView?, p1: MapPoint?) {}
+    override fun onMapViewDragStarted(p0: MapView?, p1: MapPoint?) {}
+    override fun onMapViewDragEnded(p0: MapView?, p1: MapPoint?) {}
+    override fun onMapViewMoveFinished(p0: MapView?, p1: MapPoint?) {}
 }

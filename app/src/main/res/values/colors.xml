@@ -11,4 +11,6 @@
     <color name="backColor">#221e18</color>
     <color name="customPurple">#B600CA</color>
     <color name="schedule_background">#f8f8f8</color>
+    <color name="notice_timeColor">#1E53B1</color>
+    <color name="yellow">#FFEB3B</color>
 </resources>
