@@ -1,6 +1,9 @@
 package com.ncs.ims_rescuer.ui.notifications
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,12 +12,21 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.kakao.sdk.navi.NaviClient
+import com.kakao.sdk.navi.model.CoordType
+import com.kakao.sdk.navi.model.Location
+import com.kakao.sdk.navi.model.NaviOption
+import com.ncs.imsUser.SaveDataManager.UserInfoData
 import com.ncs.ims_rescuer.GISManager.GetMylocation
+import com.ncs.ims_rescuer.HTTPManager.DTOManager.NotificationData
 import com.ncs.ims_rescuer.R
 import com.ncs.ims_rescuer.databinding.FragmentNotificationsBinding
 import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapView
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.HashMap
 
 class NotificationsFragment : Fragment(), MapView.MapViewEventListener, View.OnClickListener {
 
@@ -23,7 +35,12 @@ class NotificationsFragment : Fragment(), MapView.MapViewEventListener, View.OnC
     lateinit var map_view : MapView
     lateinit var marker : MapPOIItem
     lateinit var gps : HashMap<String, Double>
+    lateinit var userInfoData: UserInfoData
+    var format = SimpleDateFormat("yyyy-MM-dd")
+    var formatDatetime = SimpleDateFormat("yyyy년 MM월 dd일 (E) hh시 mm분")
+    var getFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'") //DateTime 파싱부분
     var expened = false
+    lateinit var noticeData : NotificationData
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         notificationsViewModel = ViewModelProvider(this).get(NotificationsViewModel::class.java)
         notificationsBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_notifications, container, false)
@@ -31,11 +48,16 @@ class NotificationsFragment : Fragment(), MapView.MapViewEventListener, View.OnC
         notificationsBinding.notificationsViewModel = notificationsViewModel
         notificationsBinding.lifecycleOwner = this
 
+        userInfoData = UserInfoData(requireContext())
+
         gps = GetMylocation().getLocation(requireContext())
         map_view = MapView(requireActivity())
         notificationsBinding.mapView.addView(map_view)
         setCurrentLocation()
+        getNotice()
+
         notificationsBinding.userCard.setOnClickListener(this)
+        notificationsBinding.naviBtn.setOnClickListener(this)
         return notificationsBinding.root
     }
     //위치 마커 기능
@@ -49,14 +71,31 @@ class NotificationsFragment : Fragment(), MapView.MapViewEventListener, View.OnC
         //setCurretMarker(mapPoint)
     }
 
-    /*fun setCurretMarker(mapPoint : MapPoint){
+    fun getNotice(){
+        var today = format.format(Calendar.getInstance().time)
+        Log.e("sdf", today)
+        notificationsViewModel.getNotice(userInfoData.getUserData()["USER_ID"].toString(), today).observe(viewLifecycleOwner, {
+            var date = getFormat.parse(it.createDate)
+            notificationsBinding.stateTitle.text = "${it.state}환자가 발생하였습니다."
+            notificationsBinding.currentAddr.text = "${it.emAddr}"
+            notificationsBinding.callTime.text = "${formatDatetime.format(date)}"
+            notificationsBinding.userAddr.text = "${it.userAddr}"
+            notificationsBinding.medicine.text = "${it.medicine}"
+            notificationsBinding.history.text = "${it.anamnesis}"
+            var mapPoint = MapPoint.mapPointWithGeoCoord(it.latitude.toDouble(),it.longitude.toDouble())
+            setCurretMarker(mapPoint, "환자 위치")
+            noticeData = it
+        })
+    }
+
+    fun setCurretMarker(mapPoint : MapPoint, pointName : String){
         marker = MapPOIItem()
-        marker.itemName = "내위치"
+        marker.itemName = pointName
         marker.mapPoint = mapPoint
         marker.tag = 0
         marker.markerType = MapPOIItem.MarkerType.BluePin
         map_view.addPOIItem(marker)
-    }*/
+    }
 
     override fun onClick(v: View?) {
         when(v?.id){
@@ -67,6 +106,24 @@ class NotificationsFragment : Fragment(), MapView.MapViewEventListener, View.OnC
                 }else{
                     notificationsBinding.expandedLayout.visibility = View.GONE
                     expened = !expened
+                }
+            }
+            notificationsBinding.naviBtn.id -> {
+                //카카오 네비가 설치 되어 있으면 바로 연결
+                if (NaviClient.instance.isKakaoNaviInstalled(requireContext())) {
+                    Log.i("Navi Able", "카카오내비 앱으로 길안내 가능")
+                    startActivity(
+                            NaviClient.instance.navigateIntent(
+                                    Location(noticeData.emAddr, noticeData.longitude, noticeData.latitude),
+                                    NaviOption(coordType = CoordType.WGS84)
+                            )
+                    )
+                } else { //카카오 네비가 설치 되어 있지 않으면 설치 페이지로 이동
+                    Log.i("Navi Disable", "카카오내비 미설치: 웹 길안내 사용 권장")
+                    val intent = Intent(Intent.ACTION_VIEW)
+                    intent.addCategory(Intent.CATEGORY_DEFAULT)
+                    intent.data = Uri.parse("market://details?id=com.locnall.KimGiSa")
+                    startActivity(intent)
                 }
             }
         }

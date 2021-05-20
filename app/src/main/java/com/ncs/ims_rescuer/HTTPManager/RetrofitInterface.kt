@@ -1,5 +1,6 @@
 package com.ncs.ims_rescuer.HTTPManager
 
+import com.ncs.ims_rescuer.HTTPManager.DTOManager.NotificationDTO
 import com.ncs.ims_rescuer.HTTPManager.DTOManager.PublicDTO
 import com.ncs.ims_rescuer.HTTPManager.DTOManager.ScheduleDTO
 import com.ncs.ims_rescuer.HTTPManager.DTOManager.UserInfoDTO
@@ -18,4 +19,7 @@ interface RetrofitInterface{
 
     @POST("/user/create")
     fun setUserInfo(@Body data: HashMap<String, String>):Call<PublicDTO>
+
+    @POST("/user/log")
+    fun getUserlog(@Body data: HashMap<String, String>):Call<NotificationDTO>
 }

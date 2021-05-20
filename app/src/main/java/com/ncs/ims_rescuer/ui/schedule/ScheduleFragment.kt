@@ -28,6 +28,7 @@ class ScheduleFragment : Fragment(){
     private lateinit var scheduleViewModel: ScheduleViewModel
     lateinit var scheduleBinding: FragmentScheduleBinding
     lateinit var userInfoData: UserInfoData
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
         scheduleViewModel = ViewModelProvider(requireActivity()).get(ScheduleViewModel::class.java)
         scheduleBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_schedule, container, false)
