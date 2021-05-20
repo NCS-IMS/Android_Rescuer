@@ -26,6 +26,18 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
 
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/userCard"
+            android:background="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/tempView"/>
+
         <TextView
             android:id="@+id/tempView"
             android:layout_width="match_parent"

@@ -16,7 +16,7 @@ import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapView
 
-class NotificationsFragment : Fragment() {
+class NotificationsFragment : Fragment(), MapView.MapViewEventListener {
 
     private lateinit var notificationsViewModel: NotificationsViewModel
     private lateinit var notificationsBinding: FragmentNotificationsBinding
@@ -42,15 +42,50 @@ class NotificationsFragment : Fragment() {
         map_view.setMapCenterPointAndZoomLevel(mapPoint, 5, true)
         map_view.zoomIn(true)
         map_view.zoomOut(true)
-        setCurretMarker(mapPoint)
+        map_view.setMapViewEventListener(this) //지도 변환 이벤트 설정
+        map_view.currentLocationTrackingMode = MapView.CurrentLocationTrackingMode.TrackingModeOnWithHeading //지도 마커 옵션 설정 (현재 현위치 트래킹 모드 + 나침반 모드 활성화)
+        //setCurretMarker(mapPoint)
     }
 
-    fun setCurretMarker(mapPoint : MapPoint){
+    /*fun setCurretMarker(mapPoint : MapPoint){
         marker = MapPOIItem()
         marker.itemName = "내위치"
         marker.mapPoint = mapPoint
         marker.tag = 0
         marker.markerType = MapPOIItem.MarkerType.BluePin
         map_view.addPOIItem(marker)
+    }*/
+
+    override fun onMapViewInitialized(p0: MapView?) {
+    }
+
+    override fun onMapViewCenterPointMoved(p0: MapView?, p1: MapPoint?) {
+    }
+
+    override fun onMapViewZoomLevelChanged(p0: MapView?, p1: Int) {
+    }
+
+    override fun onMapViewSingleTapped(p0: MapView?, p1: MapPoint?) {
+
+    }
+
+    override fun onMapViewDoubleTapped(p0: MapView?, p1: MapPoint?) {
+
+    }
+
+    override fun onMapViewLongPressed(p0: MapView?, p1: MapPoint?) {
+
+    }
+
+    override fun onMapViewDragStarted(p0: MapView?, p1: MapPoint?) {
+
+    }
+
+    override fun onMapViewDragEnded(p0: MapView?, p1: MapPoint?) {
+
+    }
+
+    override fun onMapViewMoveFinished(p0: MapView?, p1: MapPoint?) {
+
     }
 }
