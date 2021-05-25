@@ -21,14 +21,17 @@ import com.ncs.ims_rescuer.GISManager.GetMylocation
 import com.ncs.ims_rescuer.HTTPManager.DTOManager.NotificationData
 import com.ncs.ims_rescuer.R
 import com.ncs.ims_rescuer.databinding.FragmentNotificationsBinding
+import kotlinx.coroutines.*
 import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapView
+import okhttp3.Dispatcher
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.HashMap
+import kotlin.coroutines.CoroutineContext
 
-class NotificationsFragment : Fragment(), MapView.MapViewEventListener, View.OnClickListener {
+class NotificationsFragment : Fragment(), MapView.MapViewEventListener, View.OnClickListener{
 
     private lateinit var notificationsViewModel: NotificationsViewModel
     private lateinit var notificationsBinding: FragmentNotificationsBinding
@@ -53,8 +56,9 @@ class NotificationsFragment : Fragment(), MapView.MapViewEventListener, View.OnC
         gps = GetMylocation().getLocation(requireContext())
         map_view = MapView(requireActivity())
         notificationsBinding.mapView.addView(map_view)
-        setCurrentLocation()
-        getNotice()
+        setCurrentLocation() //현재 위치표시
+        getNotice() //최근 요청 목록 불러오기
+        getMyLocation()
 
         notificationsBinding.userCard.setOnClickListener(this)
         notificationsBinding.naviBtn.setOnClickListener(this)
@@ -68,7 +72,6 @@ class NotificationsFragment : Fragment(), MapView.MapViewEventListener, View.OnC
         map_view.zoomOut(true)
         map_view.setMapViewEventListener(this) //지도 변환 이벤트 설정
         map_view.currentLocationTrackingMode = MapView.CurrentLocationTrackingMode.TrackingModeOnWithHeading //지도 마커 옵션 설정 (현재 현위치 트래킹 모드 + 나침반 모드 활성화)
-        //setCurretMarker(mapPoint)
     }
 
     fun getNotice(){
@@ -97,6 +100,11 @@ class NotificationsFragment : Fragment(), MapView.MapViewEventListener, View.OnC
         map_view.addPOIItem(marker)
     }
 
+    fun getMyLocation() = runBlocking{
+        notificationsViewModel.getLocation().observe(viewLifecycleOwner, {
+            notificationsBinding.currentLocation.text = it.address_name
+        })
+    }
     override fun onClick(v: View?) {
         when(v?.id){
             notificationsBinding.userCard.id ->{
@@ -128,6 +136,7 @@ class NotificationsFragment : Fragment(), MapView.MapViewEventListener, View.OnC
             }
         }
     }
+
 
     override fun onMapViewInitialized(p0: MapView?) {}
     override fun onMapViewCenterPointMoved(p0: MapView?, p1: MapPoint?) {}

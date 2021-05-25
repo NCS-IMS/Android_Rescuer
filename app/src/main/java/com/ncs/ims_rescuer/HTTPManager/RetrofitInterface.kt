@@ -1,14 +1,8 @@
 package com.ncs.ims_rescuer.HTTPManager
 
-import com.ncs.ims_rescuer.HTTPManager.DTOManager.NotificationDTO
-import com.ncs.ims_rescuer.HTTPManager.DTOManager.PublicDTO
-import com.ncs.ims_rescuer.HTTPManager.DTOManager.ScheduleDTO
-import com.ncs.ims_rescuer.HTTPManager.DTOManager.UserInfoDTO
+import com.ncs.ims_rescuer.HTTPManager.DTOManager.*
 import retrofit2.Call
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.Header
-import retrofit2.http.POST
+import retrofit2.http.*
 
 interface RetrofitInterface{
     @POST("/schedule/find/one")
@@ -22,4 +16,7 @@ interface RetrofitInterface{
 
     @POST("/user/log")
     fun getUserlog(@Body data: HashMap<String, String>):Call<NotificationDTO>
+
+    @POST("/v2/local/geo/coord2address.json")
+    fun getLocation(@Header("Authorization") authHeader: String, @QueryMap data: HashMap<String, String>):Call<CurrentLocationDTO>
 }

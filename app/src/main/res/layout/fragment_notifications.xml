@@ -17,6 +17,21 @@
         android:clickable="true"
         tools:context=".ui.notifications.NotificationsFragment">
 
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/noti_guideline1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.85"/>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/noti_guideline2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.05"/>
+
+
         <RelativeLayout
             android:id="@+id/map_view"
             android:layout_width="match_parent"
@@ -26,6 +41,48 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
 
+        <androidx.cardview.widget.CardView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@id/noti_guideline2"
+            app:layout_constraintEnd_toEndOf="@id/noti_guideline1"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="15dp"
+            app:cardCornerRadius="10dp"
+            android:elevation="5dp">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical">
+
+                <com.airbnb.lottie.LottieAnimationView
+                    android:id="@+id/myLocation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="2dp"
+                    app:lottie_autoPlay="true"
+                    app:lottie_loop="true"
+                    app:lottie_renderMode="automatic"
+                    app:lottie_rawRes="@raw/location_icon"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+                <TextView
+                    android:id="@+id/currentLocation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="충남 천안시 동남구"
+                    android:textSize="17dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    app:layout_constraintStart_toEndOf="@id/myLocation"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
 
 
         <androidx.cardview.widget.CardView
