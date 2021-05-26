@@ -54,7 +54,6 @@ class NotificationRepository(var application: Application) {
         val data = MutableLiveData<AddressData>()
         service[1].getLocation(authHeader, info).enqueue(object : Callback<CurrentLocationDTO>{
             override fun onResponse(call: Call<CurrentLocationDTO>,response: Response<CurrentLocationDTO>) {
-                Log.e("sdfsd", info.toString())
                 if(response.code() == 200){
                     data.value = response.body()?.documents?.get(0)?.address
                 }

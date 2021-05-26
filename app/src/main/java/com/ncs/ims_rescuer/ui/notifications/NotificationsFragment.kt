@@ -29,6 +29,7 @@ import okhttp3.Dispatcher
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.HashMap
+import kotlin.concurrent.timer
 import kotlin.coroutines.CoroutineContext
 
 class NotificationsFragment : Fragment(), MapView.MapViewEventListener, View.OnClickListener{
@@ -44,6 +45,8 @@ class NotificationsFragment : Fragment(), MapView.MapViewEventListener, View.OnC
     var getFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'") //DateTime 파싱부분
     var expened = false
     lateinit var noticeData : NotificationData
+    var loopActive:Boolean = true
+    val job by lazy { Job() }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         notificationsViewModel = ViewModelProvider(this).get(NotificationsViewModel::class.java)
         notificationsBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_notifications, container, false)
@@ -58,6 +61,7 @@ class NotificationsFragment : Fragment(), MapView.MapViewEventListener, View.OnC
         notificationsBinding.mapView.addView(map_view)
         setCurrentLocation() //현재 위치표시
         getNotice() //최근 요청 목록 불러오기
+
         getMyLocation()
 
         notificationsBinding.userCard.setOnClickListener(this)
@@ -101,9 +105,16 @@ class NotificationsFragment : Fragment(), MapView.MapViewEventListener, View.OnC
     }
 
     fun getMyLocation() = runBlocking{
-        notificationsViewModel.getLocation().observe(viewLifecycleOwner, {
-            notificationsBinding.currentLocation.text = it.address_name
-        })
+         CoroutineScope(Dispatchers.Main+job).launch{
+            while(loopActive){
+                view?.let {
+                    notificationsViewModel.getLocation().observe(viewLifecycleOwner, {
+                        notificationsBinding.currentLocation.text = it.address_name
+                    })
+                }
+                delay(1000L)
+            }
+        }
     }
     override fun onClick(v: View?) {
         when(v?.id){
@@ -137,6 +148,10 @@ class NotificationsFragment : Fragment(), MapView.MapViewEventListener, View.OnC
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        loopActive = false
+    }
 
     override fun onMapViewInitialized(p0: MapView?) {}
     override fun onMapViewCenterPointMoved(p0: MapView?, p1: MapPoint?) {}
@@ -147,4 +162,6 @@ class NotificationsFragment : Fragment(), MapView.MapViewEventListener, View.OnC
     override fun onMapViewDragStarted(p0: MapView?, p1: MapPoint?) {}
     override fun onMapViewDragEnded(p0: MapView?, p1: MapPoint?) {}
     override fun onMapViewMoveFinished(p0: MapView?, p1: MapPoint?) {}
+
+   
 }
