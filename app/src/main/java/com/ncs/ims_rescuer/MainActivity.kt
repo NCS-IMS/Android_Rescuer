@@ -10,6 +10,7 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -47,9 +48,11 @@ class MainActivity : AppCompatActivity(), AnimatedBottomBar.OnTabInterceptListen
         userInfoData = UserInfoData(this)
         var bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
         Log.e("blue", bluetoothAdapter.address)
+
         initFirebase()
         setNotificationChannel()
         beaconSetup()
+
     }
 
     private fun initFirebase() {
@@ -159,5 +162,15 @@ class MainActivity : AppCompatActivity(), AnimatedBottomBar.OnTabInterceptListen
         return data_uuid.toString()
     }
 
+    fun goNotice(){
+        if(intent.hasExtra("push")){
+            var bundle = Bundle()
+            bundle.putBoolean("push", intent.extras!!.getBoolean("push"))
+            NotificationsFragment().arguments = bundle
+            fragmentManager = supportFragmentManager
+            fragmentManager.beginTransaction().replace(R.id.nav_host_fragment, NotificationsFragment()).commit()
+        }
+
+    }
 
 }
