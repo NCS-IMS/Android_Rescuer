@@ -82,8 +82,8 @@ class IntroActivity : AppCompatActivity() {
     fun getUserInfo(accessToken : String){
         var Token = "Bearer $accessToken"
         introViewModel.userInfo(Token).observe(this, {
-            if(!appSetting.getSetting()["first"].toBoolean()) {
-                appSetting.setFirstCheck(true)
+            if(appSetting.getSetting()["first"].toBoolean()) {
+                appSetting.setFirstCheck(false)
                 saveInfo(it)
             }
             startActivity(Intent(this@IntroActivity, MainActivity::class.java))
@@ -102,6 +102,8 @@ class IntroActivity : AppCompatActivity() {
         userInfoData.setBirthday(data.birthday)
         userInfoData.setBirthYear(data.birthyear)
     }
+
+
 
     fun getPermission(){
         var permission = object : PermissionListener {

@@ -67,8 +67,8 @@ class LoginActivity : AppCompatActivity() {
     fun getUserInfo(accessToken : String){
         var Token = "Bearer $accessToken"
         loginViewModel.userInfo(Token).observe(this, {
-            if(!appSetting.getSetting()["first"].toBoolean()) {
-                appSetting.setFirstCheck(true)
+            if(appSetting.getSetting()["first"].toBoolean()) {
+                appSetting.setFirstCheck(false)
                 saveInfo(it)
             }
             startActivity(Intent(this@LoginActivity, MainActivity::class.java))

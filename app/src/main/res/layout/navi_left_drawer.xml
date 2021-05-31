@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:id="@+id/navi"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/navi_back3"
+        android:orientation="vertical">
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="90dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp"
+            android:paddingStart="24dp"
+            android:fontFamily="@font/cookierun_bold"
+            android:textColor="@color/white"
+            android:text="응급구조사"
+            android:textSize="12sp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:orientation="horizontal"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp">
+
+            <TextView
+                android:id="@+id/profileName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="김득회"
+                android:textColor="@color/white"
+                android:fontFamily="@font/cookierun_bold"
+                android:letterSpacing="0.5"
+                android:textSize="34sp" />
+
+        </LinearLayout>
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="20dp" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="20dp">
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/navi_guideline1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.85"/>
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/navi_guideline2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.5"/>
+
+            <TextView
+                android:id="@+id/phoneTxt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/cookierun_bold"
+                android:text="연락처 : "
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <TextView
+                android:id="@+id/phoneEdit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@id/phoneTxt"
+                app:layout_constraintTop_toTopOf="parent"
+                android:fontFamily="@font/cookierun_bold"
+                android:textSize="18sp"
+                android:textColor="@color/white"
+                tools:text="010-4304-2134"/>
+
+            <TextView
+                android:layout_marginTop="20dp"
+                android:id="@+id/emailTxt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="이메일 : "
+                android:textColor="@color/white"
+                android:fontFamily="@font/cookierun_bold"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/phoneTxt"/>
+
+            <TextView
+                android:layout_marginTop="20dp"
+                android:id="@+id/emailEdit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@id/phoneTxt"
+                app:layout_constraintTop_toBottomOf="@id/phoneTxt"
+                android:textSize="18sp"
+                android:textColor="@color/white"
+                android:fontFamily="@font/cookierun_bold"
+                tools:text="dh97k@naver.com"/>
+
+            <TextView
+                android:layout_marginTop="20dp"
+                android:id="@+id/genderTxt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="성별 : "
+                android:textColor="@color/white"
+                android:fontFamily="@font/cookierun_bold"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/emailTxt"/>
+
+            <TextView
+                android:layout_marginTop="20dp"
+                android:id="@+id/genderEdit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/cookierun_bold"
+                app:layout_constraintStart_toEndOf="@id/phoneTxt"
+                android:textColor="@color/white"
+                app:layout_constraintTop_toBottomOf="@id/emailTxt"
+                android:textSize="18sp"
+                tools:text="M"/>
+
+            <TextView
+                android:id="@+id/logout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/cookierun_bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/navi_guideline1"
+                android:textSize="18dp"
+                android:gravity="center_vertical"
+                android:drawableLeft="@drawable/logout_icon"
+                android:textColor="@color/white"
+                android:drawablePadding="10dp"
+                android:text="logout"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/navi_guideline2"
+                app:layout_constraintStart_toStartOf="parent"
+                android:src="@drawable/opacity_logo"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="40dp" />
+
+    </LinearLayout>
+
+</layout>
+

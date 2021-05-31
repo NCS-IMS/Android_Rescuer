@@ -63,26 +63,6 @@ class NotificationsFragment : Fragment(), MapView.MapViewEventListener, View.OnC
         getNotice() //최근 요청 목록 불러오기
         getMyLocation()
 
-        var result = arguments?.getBoolean("push").let {
-            Log.e("Push??", it.toString())
-            if (NaviClient.instance.isKakaoNaviInstalled(requireContext())) {
-                Log.i("Navi Able", "카카오내비 앱으로 길안내 가능")
-                startActivity(
-                        NaviClient.instance.navigateIntent(
-                                Location(noticeData.emAddr, noticeData.longitude, noticeData.latitude),
-                                NaviOption(coordType = CoordType.WGS84)
-                        )
-                )
-            } else { //카카오 네비가 설치 되어 있지 않으면 설치 페이지로 이동
-                Log.i("Navi Disable", "카카오내비 미설치: 웹 길안내 사용 권장")
-                val intent = Intent(Intent.ACTION_VIEW)
-                intent.addCategory(Intent.CATEGORY_DEFAULT)
-                intent.data = Uri.parse("market://details?id=com.locnall.KimGiSa")
-                startActivity(intent)
-            }
-        }
-        Log.e("Push", result.toString())
-
         notificationsBinding.userCard.setOnClickListener(this)
         notificationsBinding.naviBtn.setOnClickListener(this)
         return notificationsBinding.root

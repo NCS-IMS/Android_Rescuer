@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 class ApplicationSetting(context: Context) {
     var appSetting :SharedPreferences = context.getSharedPreferences("setting", Context.MODE_PRIVATE)
     var editor = appSetting.edit()
+
     fun setFirstCheck(first: Boolean):Boolean{
         editor.putString("first", first.toString())
         return editor.commit()
@@ -18,7 +19,7 @@ class ApplicationSetting(context: Context) {
 
     fun getSetting():HashMap<String, String>{
         var setting = HashMap<String, String>()
-        setting["first"] = appSetting.getString("first", "false").toString()
+        setting["first"] = appSetting.getString("first", "true").toString()
         setting["fcm"] = appSetting.getString("fcm", "").toString()
         return setting
     }
