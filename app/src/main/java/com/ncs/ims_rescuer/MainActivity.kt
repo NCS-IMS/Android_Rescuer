@@ -6,6 +6,7 @@ import android.app.NotificationManager
 import android.bluetooth.le.AdvertiseCallback
 import android.bluetooth.le.AdvertiseSettings
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -29,8 +30,10 @@ import com.ncs.ims_rescuer.SaveDataManager.ApplicationSetting
 import com.ncs.ims_rescuer.databinding.ActivityMainBinding
 import com.ncs.ims_rescuer.databinding.NaviLeftDrawerBinding
 import com.ncs.ims_rescuer.ui.home.HomeFragment
+import com.ncs.ims_rescuer.ui.login.LoginActivity
 import com.ncs.ims_rescuer.ui.notifications.NotificationsFragment
 import com.ncs.ims_rescuer.ui.schedule.ScheduleFragment
+import com.nhn.android.naverlogin.OAuthLogin
 import com.yarolegovich.slidingrootnav.SlidingRootNav
 import com.yarolegovich.slidingrootnav.SlidingRootNavBuilder
 import kotlinx.coroutines.CoroutineScope
@@ -51,10 +54,14 @@ class MainActivity : AppCompatActivity(), AnimatedBottomBar.OnTabInterceptListen
     lateinit var fragmentManager: FragmentManager
     lateinit var userInfoData: UserInfoData
     lateinit var slidingRootNav: SlidingRootNav
+    lateinit var oAuthLogin : OAuthLogin
 
-    lateinit var navBinding : NaviLeftDrawerBinding
+    lateinit var navBinding: NaviLeftDrawerBinding
     private val appSetting by lazy {
         ApplicationSetting(this)
+    }
+    private val logoutText by lazy {
+        findViewById<TextView>(R.id.logout)
     }
 
     @SuppressLint("HardwareIds")
@@ -64,7 +71,7 @@ class MainActivity : AppCompatActivity(), AnimatedBottomBar.OnTabInterceptListen
         mainBinding.navView.setOnTabInterceptListener(this)
 
         userInfoData = UserInfoData(this)
-
+        oAuthLogin = OAuthLogin.getInstance()
 
         slidingRootNav = SlidingRootNavBuilder(this)
             .withMenuOpened(false)
@@ -74,9 +81,12 @@ class MainActivity : AppCompatActivity(), AnimatedBottomBar.OnTabInterceptListen
             .inject()
 
         val layoutInflater = getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        navBinding = DataBindingUtil.inflate(layoutInflater, R.layout.navi_left_drawer, slidingRootNav.layout[0].parent as ViewGroup, false)
-
-
+        navBinding = DataBindingUtil.inflate(
+            layoutInflater,
+            R.layout.navi_left_drawer,
+            slidingRootNav.layout[1].parent as ViewGroup,
+            false
+        )
         mainBinding.menuIcon.setOnClickListener(this)
 
         initFirebase()
@@ -84,7 +94,9 @@ class MainActivity : AppCompatActivity(), AnimatedBottomBar.OnTabInterceptListen
         CoroutineScope(Dispatchers.Default).launch {
             beaconSetup()
         }
+        initNavSetting()
 
+        logoutText.setOnClickListener(this)
     }
 
     private fun initFirebase() {
@@ -180,8 +192,11 @@ class MainActivity : AppCompatActivity(), AnimatedBottomBar.OnTabInterceptListen
         })
     }
 
-    fun initSetting(){
-        navBinding.profileName
+    fun initNavSetting() {
+        findViewById<TextView>(R.id.profileName).text = userInfoData.getUserData()["NAME"].toString()
+        findViewById<TextView>(R.id.phoneEdit).text = userInfoData.getUserData()["PHONE"].toString()
+        findViewById<TextView>(R.id.emailEdit).text = userInfoData.getUserData()["EMAIL"].toString()
+        findViewById<TextView>(R.id.genderEdit).text = if(userInfoData.getUserData()["GENDER"]=="M") "남성" else "여성"
     }
 
     override fun onRequestPermissionsResult(
@@ -205,12 +220,18 @@ class MainActivity : AppCompatActivity(), AnimatedBottomBar.OnTabInterceptListen
         Log.e("userid", userInfoData.getUserData()["USER_ID"]!!)
         return data_uuid.toString()
     }
+
     override fun onClick(v: View?) {
         when (v?.id) {
             mainBinding.menuIcon.id -> {
                 slidingRootNav.openMenu()
                 val b = slidingRootNav.layout.get(0).findViewById<TextView>(R.id.profileName)
                 Log.e("get Name", b.text.toString())
+            }
+            R.id.logout ->{
+                oAuthLogin.logout(this)
+                startActivity(Intent(this, LoginActivity::class.java))
+                finish()
             }
         }
     }

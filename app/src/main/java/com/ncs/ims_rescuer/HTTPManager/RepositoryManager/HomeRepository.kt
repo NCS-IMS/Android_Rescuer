@@ -55,7 +55,7 @@ class HomeRepository(var application: Application) {
             "token" to fcmToken,
             "firestationId" to "0"
         )
-        Log.e("hash", userInfoData.getUserData()["gender"].toString())
+        Log.e("hash", userInfoData.getUserData()["GENDER"].toString())
         service.setUserInfo(info).enqueue(object : Callback<PublicDTO> {
             override fun onResponse(call: Call<PublicDTO>, response: Response<PublicDTO>) {
                 if(response.code() == 200){

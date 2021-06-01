@@ -27,11 +27,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class HomeFragment : Fragment(), View.OnClickListener{
+class HomeFragment : Fragment(){
 
     private lateinit var homeViewModel: HomeViewModel
     private lateinit var homeBinding: FragmentHomeBinding
-    lateinit var oAuthLogin : OAuthLogin
 
     private val appSetting by lazy {
         ApplicationSetting(requireContext())
@@ -43,15 +42,12 @@ class HomeFragment : Fragment(), View.OnClickListener{
         homeBinding.homeViewModel = homeViewModel
         homeBinding.lifecycleOwner = this
 
-        oAuthLogin = OAuthLogin.getInstance()
-
         homeViewModel.userName.observe(viewLifecycleOwner, {
             homeBinding.userName.text = it
         })
         homeViewModel.userImg.observe(viewLifecycleOwner, {
             Glide.with(this).load(it).into(homeBinding.userImg)
         })
-        homeBinding.logoutBtn.setOnClickListener(this)
         //gps.getLocation(requireContext())["longitude"]!!, gps.getLocation(requireContext())["longitude"]!!
 
         enrollUser()
@@ -66,16 +62,6 @@ class HomeFragment : Fragment(), View.OnClickListener{
                         Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
                         appSetting.setFirstCheck(false)
                     })
-            }
-        }
-    }
-
-    override fun onClick(v: View?) {
-        when(v?.id){
-            homeBinding.logoutBtn.id ->{
-                oAuthLogin.logout(requireContext())
-                startActivity(Intent(requireActivity(), LoginActivity::class.java))
-                requireActivity().finish()
             }
         }
     }
