@@ -33,7 +33,7 @@ class IntroActivity : AppCompatActivity() {
     lateinit var introBinding: ActivityIntroBinding
     lateinit var introViewModel: IntroViewModel
     lateinit var userInfoData: UserInfoData
-    lateinit var appSetting : ApplicationSetting
+    lateinit var appSetting: ApplicationSetting
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,39 +52,50 @@ class IntroActivity : AppCompatActivity() {
 
     }
 
-    fun init(){
+    fun init() {
         oAuthLogin = OAuthLogin.getInstance()
         var loginUtil = NaverOAthUtil()
 
-        oAuthLogin.init(this, loginUtil.OAUTH_CLIENT_ID, loginUtil.OAUTH_CLIENT_SECRET, loginUtil.OAUTH_CLIENT_NAME)
+        oAuthLogin.init(
+            this,
+            loginUtil.OAUTH_CLIENT_ID,
+            loginUtil.OAUTH_CLIENT_SECRET,
+            loginUtil.OAUTH_CLIENT_NAME
+        )
         oAuthLogin.startOauthLoginActivity(this, oAuthLoginHandler) //네이버 자동로그인 기능 구현
 
     }
+
     @SuppressLint("HandlerLeak")
-    private var oAuthLoginHandler = object : OAuthLoginHandler(){
+    private var oAuthLoginHandler = object : OAuthLoginHandler() {
         override fun run(state: Boolean) {
-            if(state){
+            if (state) {
                 var accessToken = oAuthLogin.getAccessToken(this@IntroActivity)
                 var refreshToken = oAuthLogin.getRefreshToken(this@IntroActivity)
                 var expireAt = oAuthLogin.getExpiresAt(this@IntroActivity)
                 var tokenType = oAuthLogin.getTokenType(this@IntroActivity)
                 getUserInfo(accessToken)
-            }else{
+            } else {
                 var errorCode = oAuthLogin.getLastErrorCode(this@IntroActivity).code
                 var errorDesc = oAuthLogin.getLastErrorDesc(this@IntroActivity)
-                Toast.makeText(this@IntroActivity, "errorCode: $errorCode errorDesc: $errorDesc", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this@IntroActivity,
+                    "errorCode: $errorCode errorDesc: $errorDesc",
+                    Toast.LENGTH_SHORT
+                ).show()
                 startActivity(Intent(this@IntroActivity, LoginActivity::class.java))
                 finish()
             }
         }
     }
 
-    fun getUserInfo(accessToken : String){
+    fun getUserInfo(accessToken: String) {
         var Token = "Bearer $accessToken"
         introViewModel.userInfo(Token).observe(this, {
-            if(appSetting.getSetting()["first"].toBoolean()) {
-                appSetting.setFirstCheck(false)
+            if (appSetting.getSetting()["first"].toBoolean()) {
+//                appSetting.setFirstCheck(false)
                 saveInfo(it)
+                Log.e("aaffa", it.toString())
             }
             startActivity(Intent(this@IntroActivity, MainActivity::class.java))
             finish()
@@ -92,7 +103,7 @@ class IntroActivity : AppCompatActivity() {
     }
 
     //로그인 사용자 정보 저장
-    fun saveInfo(data : UserInfoDetail){
+    fun saveInfo(data: UserInfoDetail) {
         userInfoData.setUserID(data.id)
         userInfoData.setName(data.name)
         userInfoData.setPhone(data.mobile)
@@ -104,12 +115,12 @@ class IntroActivity : AppCompatActivity() {
     }
 
 
-
-    fun getPermission(){
+    fun getPermission() {
         var permission = object : PermissionListener {
             override fun onPermissionGranted() {
                 init()
             }
+
             override fun onPermissionDenied(deniedPermissions: MutableList<String>?) {
                 finishAffinity()
             }

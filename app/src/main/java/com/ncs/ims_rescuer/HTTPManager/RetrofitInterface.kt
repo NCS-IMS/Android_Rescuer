@@ -12,11 +12,15 @@ interface RetrofitInterface{
     fun getUserInfo(@Header("Authorization") authHeader : String): Call<UserInfoDTO>
 
     @POST("/user/create")
-    fun setUserInfo(@Body data: HashMap<String, String>):Call<PublicDTO>
+    fun setUserInfo(@Body data: HashMap<String, String?>):Call<PublicDTO>
 
     @POST("/user/log")
     fun getUserlog(@Body data: HashMap<String, String>):Call<NotificationDTO>
 
     @POST("/v2/local/geo/coord2address.json")
     fun getLocation(@Header("Authorization") authHeader: String, @QueryMap data: HashMap<String, String>):Call<CurrentLocationDTO>
+
+    @GET ("/user/find/firestation")
+    fun getFireStation(@Body data : HashMap<String, String>): Call<FireStationDTO>
+
 }

@@ -33,6 +33,9 @@ import com.ncs.ims_rescuer.ui.notifications.NotificationsFragment
 import com.ncs.ims_rescuer.ui.schedule.ScheduleFragment
 import com.yarolegovich.slidingrootnav.SlidingRootNav
 import com.yarolegovich.slidingrootnav.SlidingRootNavBuilder
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import nl.joery.animatedbottombar.AnimatedBottomBar
 import org.altbeacon.beacon.Beacon
 import org.altbeacon.beacon.BeaconParser
@@ -46,10 +49,13 @@ class MainActivity : AppCompatActivity(), AnimatedBottomBar.OnTabInterceptListen
 
     lateinit var mainBinding: ActivityMainBinding
     lateinit var fragmentManager: FragmentManager
-    lateinit var appSetting: ApplicationSetting
     lateinit var userInfoData: UserInfoData
     lateinit var slidingRootNav: SlidingRootNav
 
+    lateinit var navBinding : NaviLeftDrawerBinding
+    private val appSetting by lazy {
+        ApplicationSetting(this)
+    }
 
     @SuppressLint("HardwareIds")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,7 +63,6 @@ class MainActivity : AppCompatActivity(), AnimatedBottomBar.OnTabInterceptListen
         mainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         mainBinding.navView.setOnTabInterceptListener(this)
 
-        appSetting = ApplicationSetting(this)
         userInfoData = UserInfoData(this)
 
 
@@ -68,17 +73,17 @@ class MainActivity : AppCompatActivity(), AnimatedBottomBar.OnTabInterceptListen
             .withMenuLayout(R.layout.navi_left_drawer)
             .inject()
 
-        var a = getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        var binding : NaviLeftDrawerBinding = DataBindingUtil.inflate(a, R.layout.navi_left_drawer, slidingRootNav.layout.get(0).parent as ViewGroup, false)
-        Log.e("dsfsdfsdfxsdfsd", binding.profileName.text.toString())
-
+        val layoutInflater = getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        navBinding = DataBindingUtil.inflate(layoutInflater, R.layout.navi_left_drawer, slidingRootNav.layout[0].parent as ViewGroup, false)
 
 
         mainBinding.menuIcon.setOnClickListener(this)
 
         initFirebase()
         setNotificationChannel()
-        beaconSetup()
+        CoroutineScope(Dispatchers.Default).launch {
+            beaconSetup()
+        }
 
     }
 
@@ -175,6 +180,10 @@ class MainActivity : AppCompatActivity(), AnimatedBottomBar.OnTabInterceptListen
         })
     }
 
+    fun initSetting(){
+        navBinding.profileName
+    }
+
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -189,23 +198,13 @@ class MainActivity : AppCompatActivity(), AnimatedBottomBar.OnTabInterceptListen
         val charSet = Charsets.UTF_8
         var byt_arr = userInfoData.getUserData()["USER_ID"]!!.toByteArray(charSet)
         val data_uuid = UUID.nameUUIDFromBytes(byt_arr)
+        CoroutineScope(Dispatchers.Default).launch {
+            appSetting.setUUID(data_uuid.toString())
+        }
         Log.e("UUID", data_uuid.toString())
         Log.e("userid", userInfoData.getUserData()["USER_ID"]!!)
         return data_uuid.toString()
     }
-
-    fun goNotice() {
-        if (intent.hasExtra("push")) {
-            var bundle = Bundle()
-            bundle.putBoolean("push", intent.extras!!.getBoolean("push"))
-            NotificationsFragment().arguments = bundle
-            fragmentManager = supportFragmentManager
-            fragmentManager.beginTransaction()
-                .replace(R.id.nav_host_fragment, NotificationsFragment()).commit()
-        }
-
-    }
-
     override fun onClick(v: View?) {
         when (v?.id) {
             mainBinding.menuIcon.id -> {

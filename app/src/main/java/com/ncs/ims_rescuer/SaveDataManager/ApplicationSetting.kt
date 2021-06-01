@@ -17,10 +17,16 @@ class ApplicationSetting(context: Context) {
         return editor.commit()
     }
 
+    fun setUUID(uuid: String):Boolean{
+        editor.putString("uuid", uuid)
+        return editor.commit()
+    }
+
     fun getSetting():HashMap<String, String>{
         var setting = HashMap<String, String>()
         setting["first"] = appSetting.getString("first", "true").toString()
         setting["fcm"] = appSetting.getString("fcm", "").toString()
+        setting["uuid"] = appSetting.getString("uuid", "").toString()
         return setting
     }
 }
