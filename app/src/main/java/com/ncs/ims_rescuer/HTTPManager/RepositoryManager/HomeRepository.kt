@@ -45,7 +45,7 @@ class HomeRepository(var application: Application) {
         var userInfoData = UserInfoData(application)
         val data = MutableLiveData<String>()
         var info = hashMapOf(
-            "id" to userInfoData.getUserData()["USER_ID"],
+            "kakaoId" to userInfoData.getUserData()["USER_ID"],
             "gender" to if(userInfoData.getUserData()["GENDER"] == "M") "1" else "0",
             "email" to userInfoData.getUserData()["EMAIL"],
             "mobile" to userInfoData.getUserData()["PHONE"],

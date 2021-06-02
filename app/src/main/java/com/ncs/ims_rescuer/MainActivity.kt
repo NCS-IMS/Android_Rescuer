@@ -1,31 +1,35 @@
 package com.ncs.ims_rescuer
 
+import android.R.attr
 import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.bluetooth.le.AdvertiseCallback
 import android.bluetooth.le.AdvertiseSettings
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.get
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.messaging.FirebaseMessaging
 import com.ncs.imsUser.SaveDataManager.UserInfoData
+import com.ncs.ims_rescuer.HTTPManager.RepositoryManager.MainRepository
 import com.ncs.ims_rescuer.SaveDataManager.ApplicationSetting
 import com.ncs.ims_rescuer.databinding.ActivityMainBinding
 import com.ncs.ims_rescuer.databinding.NaviLeftDrawerBinding
@@ -43,8 +47,9 @@ import nl.joery.animatedbottombar.AnimatedBottomBar
 import org.altbeacon.beacon.Beacon
 import org.altbeacon.beacon.BeaconParser
 import org.altbeacon.beacon.BeaconTransmitter
-import org.w3c.dom.Text
+import java.io.IOException
 import java.util.*
+
 
 class MainActivity : AppCompatActivity(), AnimatedBottomBar.OnTabInterceptListener,
     View.OnClickListener {
@@ -62,6 +67,9 @@ class MainActivity : AppCompatActivity(), AnimatedBottomBar.OnTabInterceptListen
     }
     private val logoutText by lazy {
         findViewById<TextView>(R.id.logout)
+    }
+    private val photoChange by lazy {
+        findViewById<TextView>(R.id.photoChange);
     }
 
     @SuppressLint("HardwareIds")
@@ -97,6 +105,7 @@ class MainActivity : AppCompatActivity(), AnimatedBottomBar.OnTabInterceptListen
         initNavSetting()
 
         logoutText.setOnClickListener(this)
+        photoChange.setOnClickListener(this)
     }
 
     private fun initFirebase() {
@@ -228,10 +237,33 @@ class MainActivity : AppCompatActivity(), AnimatedBottomBar.OnTabInterceptListen
                 val b = slidingRootNav.layout.get(0).findViewById<TextView>(R.id.profileName)
                 Log.e("get Name", b.text.toString())
             }
-            R.id.logout ->{
+            R.id.logout -> {
                 oAuthLogin.logout(this)
                 startActivity(Intent(this, LoginActivity::class.java))
                 finish()
+            }
+            R.id.photoChange -> {
+                var intent = Intent(Intent.ACTION_PICK)
+                intent.setType(MediaStore.Images.Media.CONTENT_TYPE)
+                startActivityForResult(intent, 1)
+            }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(requestCode == 1 && data != null){
+            try {
+                contentResolver.openInputStream(data?.data!!).use {
+                    BitmapFactory.decodeStream(it).let {
+                        findViewById<ImageView>(R.id.logoImg).setImageBitmap(it)
+                        MainRepository().updateImage(it, userInfoData.getUserData()["USER_ID"].toString()).observe(this,{
+                            Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+                        })
+                    }
+                }
+            }catch (e : IOException){
+                Toast.makeText(this, "파일 추출 실패", Toast.LENGTH_SHORT).show()
             }
         }
     }

@@ -1,6 +1,8 @@
 package com.ncs.ims_rescuer.HTTPManager
 
 import com.ncs.ims_rescuer.HTTPManager.DTOManager.*
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -22,5 +24,9 @@ interface RetrofitInterface{
 
     @GET ("/user/find/firestation")
     fun getFireStation(@Body data : HashMap<String, String>): Call<FireStationDTO>
+
+    @Multipart
+    @POST("/user/modify/image")
+    fun updateImage(@Part postImg: MultipartBody.Part, @PartMap data : HashMap<String, RequestBody>):Call<PublicDTO>
 
 }
