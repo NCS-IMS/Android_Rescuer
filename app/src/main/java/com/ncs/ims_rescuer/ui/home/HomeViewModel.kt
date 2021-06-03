@@ -8,6 +8,8 @@ import androidx.lifecycle.ViewModel
 import com.ncs.imsUser.SaveDataManager.UserInfoData
 import com.ncs.ims_rescuer.HTTPManager.DTOManager.FireStationData
 import com.ncs.ims_rescuer.HTTPManager.RepositoryManager.HomeRepository
+import com.ncs.ims_rescuer.HTTPManager.Tools
+import com.ncs.ims_rescuer.R
 
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -15,7 +17,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     val homeRepository = HomeRepository(application)
 
     val _userImg = MutableLiveData<String>().apply {
-        value = userInfoData.getUserData()["IMGURL"]
+        value = "${Tools().EMERGENCY_URL}/user/${userInfoData.getUserData()["USER_ID"].toString()}.jpg"
     }
     private val _userName = MutableLiveData<String>().apply {
         value = userInfoData.getUserData()["NAME"]

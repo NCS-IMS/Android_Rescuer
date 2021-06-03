@@ -8,10 +8,13 @@ import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.bumptech.glide.Glide
+import com.ncs.imsUser.SaveDataManager.UserInfoData
 import com.ncs.ims_rescuer.HTTPManager.DTOManager.PublicDTO
 import com.ncs.ims_rescuer.HTTPManager.RetrofitAPI
 import com.ncs.ims_rescuer.HTTPManager.RetrofitInterface
 import com.ncs.ims_rescuer.HTTPManager.Tools
+import com.ncs.ims_rescuer.R
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -32,16 +35,17 @@ class MainRepository{
         val byteArrayOutputStream = ByteArrayOutputStream()
         bitmap.compress(Bitmap.CompressFormat.JPEG, 10, byteArrayOutputStream)
         var requestBody = RequestBody.create(MediaType.parse("image/jpg"), byteArrayOutputStream.toByteArray())
-        var uploadImg = MultipartBody.Part.createFormData("profile_image", "useImg", requestBody)
+        var uploadImg = MultipartBody.Part.createFormData("profile_image", "${id}", requestBody)
 
         val kakaoId = RequestBody.create(MediaType.parse("text/plain"), id)
-
+        var filename : RequestBody = RequestBody.create(MediaType.parse("multipart/form-data"), id)
         var info = hashMapOf(
-            "kakaoId" to kakaoId
+            "kakaoId" to kakaoId,
+            "filename" to filename
         )
         service.updateImage(uploadImg, info).enqueue(object : Callback<PublicDTO>{
             override fun onResponse(call: Call<PublicDTO>, response: Response<PublicDTO>) {
-                message.value = response.body()?.message
+                message.value = "${Tools().EMERGENCY_URL}/user/${id}.jpg"
             }
 
             override fun onFailure(call: Call<PublicDTO>, t: Throwable) {

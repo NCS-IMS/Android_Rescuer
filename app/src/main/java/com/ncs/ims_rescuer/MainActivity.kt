@@ -26,10 +26,15 @@ import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.signature.ObjectKey
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.messaging.FirebaseMessaging
 import com.ncs.imsUser.SaveDataManager.UserInfoData
 import com.ncs.ims_rescuer.HTTPManager.RepositoryManager.MainRepository
+import com.ncs.ims_rescuer.HTTPManager.Tools
 import com.ncs.ims_rescuer.SaveDataManager.ApplicationSetting
 import com.ncs.ims_rescuer.databinding.ActivityMainBinding
 import com.ncs.ims_rescuer.databinding.NaviLeftDrawerBinding
@@ -256,9 +261,16 @@ class MainActivity : AppCompatActivity(), AnimatedBottomBar.OnTabInterceptListen
             try {
                 contentResolver.openInputStream(data?.data!!).use {
                     BitmapFactory.decodeStream(it).let {
-                        findViewById<ImageView>(R.id.logoImg).setImageBitmap(it)
                         MainRepository().updateImage(it, userInfoData.getUserData()["USER_ID"].toString()).observe(this,{
-                            Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+                            Log.e("fds", it)
+                            Glide.with(this).load(it)
+                                .error(Glide.with(this).load(R.drawable.no_image))
+                                .apply(RequestOptions()
+                                    .signature(ObjectKey(System.currentTimeMillis()))
+                                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                    .skipMemoryCache(true)
+                                )
+                                .into(findViewById(R.id.userImg))
                         })
                     }
                 }
