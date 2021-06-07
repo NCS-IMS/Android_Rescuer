@@ -43,6 +43,14 @@ class UserInfoData(context: Context) {
         editor.putString("IMGURL",imgUrl)
         return editor.commit()
     }
+    fun setFireStationId(firestationId: String): Boolean{
+        editor.putString("FIREID",firestationId)
+        return editor.commit()
+    }
+    fun setFireStationName(firestationName: String): Boolean{
+        editor.putString("FIRENAME",firestationName)
+        return editor.commit()
+    }
     fun getUserData():HashMap<String, String>{
         val userInfo = HashMap<String, String>()
         userInfo["USER_ID"] = userData.getString("USER_ID", "")
@@ -53,6 +61,8 @@ class UserInfoData(context: Context) {
         userInfo["GENDER"] = userData.getString("GENDER", "")
         userInfo["IMGURL"] = userData.getString("IMGURL", "")
         userInfo["EMAIL"] = userData.getString("EMAIL", "")
+        userInfo["FIREID"] = userData.getString("FIREID", "")
+        userInfo["FIRENAME"] = userData.getString("FIRENAME", "")
         return userInfo
     }
 

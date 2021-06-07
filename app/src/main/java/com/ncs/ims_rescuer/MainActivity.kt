@@ -1,6 +1,5 @@
 package com.ncs.ims_rescuer
 
-import android.R.attr
 import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -8,15 +7,12 @@ import android.bluetooth.le.AdvertiseCallback
 import android.bluetooth.le.AdvertiseSettings
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -34,10 +30,10 @@ import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.messaging.FirebaseMessaging
 import com.ncs.imsUser.SaveDataManager.UserInfoData
 import com.ncs.ims_rescuer.HTTPManager.RepositoryManager.MainRepository
-import com.ncs.ims_rescuer.HTTPManager.Tools
 import com.ncs.ims_rescuer.SaveDataManager.ApplicationSetting
 import com.ncs.ims_rescuer.databinding.ActivityMainBinding
 import com.ncs.ims_rescuer.databinding.NaviLeftDrawerBinding
+import com.ncs.ims_rescuer.ui.changePositionDialog.ChangePositionDialog
 import com.ncs.ims_rescuer.ui.home.HomeFragment
 import com.ncs.ims_rescuer.ui.login.LoginActivity
 import com.ncs.ims_rescuer.ui.notifications.NotificationsFragment
@@ -73,8 +69,11 @@ class MainActivity : AppCompatActivity(), AnimatedBottomBar.OnTabInterceptListen
     private val logoutText by lazy {
         findViewById<TextView>(R.id.logout)
     }
-    private val photoChange by lazy {
-        findViewById<TextView>(R.id.photoChange);
+    private val changeBtn by lazy {
+        findViewById<ImageView>(R.id.changeBtn)
+    }
+    private val userPosition by lazy {
+        findViewById<TextView>(R.id.userPosition)
     }
 
     @SuppressLint("HardwareIds")
@@ -109,8 +108,8 @@ class MainActivity : AppCompatActivity(), AnimatedBottomBar.OnTabInterceptListen
         }
         initNavSetting()
 
+        registerForContextMenu(changeBtn)
         logoutText.setOnClickListener(this)
-        photoChange.setOnClickListener(this)
     }
 
     private fun initFirebase() {
@@ -147,6 +146,37 @@ class MainActivity : AppCompatActivity(), AnimatedBottomBar.OnTabInterceptListen
             )
             notificationManager.createNotificationChannel(channel)
         }
+    }
+
+    override fun onCreateContextMenu(menu: ContextMenu?,v: View?,menuInfo: ContextMenu.ContextMenuInfo?) {
+        super.onCreateContextMenu(menu, v, menuInfo)
+        val menuInflater = menuInflater
+        when(v?.id){
+            R.id.changeBtn->{
+                menu?.setHeaderTitle("변경 메뉴")
+                menuInflater.inflate(R.menu.change_menu, menu)
+            }
+        }
+
+    }
+
+    override fun onContextItemSelected(item: MenuItem): Boolean {
+        super.onContextItemSelected(item)
+        Log.e("ds", "sdfsdfsdfd")
+        when(item.itemId){
+            R.id.photo_menu->{
+                var intent = Intent(Intent.ACTION_PICK)
+                intent.setType(MediaStore.Images.Media.CONTENT_TYPE)
+                startActivityForResult(intent, 1)
+                return true
+            }
+            R.id.position_menu->{
+                val fireStationDialog = ChangePositionDialog(this, userPosition)
+                fireStationDialog.show(supportFragmentManager, fireStationDialog.tag)
+                return true
+            }
+        }
+        return false
     }
 
     override fun onTabIntercepted(
@@ -192,6 +222,13 @@ class MainActivity : AppCompatActivity(), AnimatedBottomBar.OnTabInterceptListen
 
         var beaconParser = BeaconParser()
             .setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24")
+
+        //ALTBEACON      m:2-3=beac,i:4-19,i:20-21,i:22-23,p:24-24,d:25-25
+        //EDDYSTONE TLM  x,s:0-1=feaa,m:2-2=20,d:3-3,d:4-5,d:6-7,d:8-11,d:12-15
+        //EDDYSTONE UID  s:0-1=feaa,m:2-2=00,p:3-3:-41,i:4-13,i:14-19
+        //EDDYSTONE URL  s:0-1=feaa,m:2-2=10,p:3-3:-41,i:4-20v
+        //IBEACON        m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24
+
         var beaconTransmitter = BeaconTransmitter(this, beaconParser)
         beaconTransmitter.startAdvertising(beacon, object : AdvertiseCallback() {
             override fun onStartSuccess(settingsInEffect: AdvertiseSettings?) {
@@ -211,6 +248,7 @@ class MainActivity : AppCompatActivity(), AnimatedBottomBar.OnTabInterceptListen
         findViewById<TextView>(R.id.phoneEdit).text = userInfoData.getUserData()["PHONE"].toString()
         findViewById<TextView>(R.id.emailEdit).text = userInfoData.getUserData()["EMAIL"].toString()
         findViewById<TextView>(R.id.genderEdit).text = if(userInfoData.getUserData()["GENDER"]=="M") "남성" else "여성"
+        userPosition.text = userInfoData.getUserData()["FIRENAME"].toString()
     }
 
     override fun onRequestPermissionsResult(
@@ -246,11 +284,6 @@ class MainActivity : AppCompatActivity(), AnimatedBottomBar.OnTabInterceptListen
                 oAuthLogin.logout(this)
                 startActivity(Intent(this, LoginActivity::class.java))
                 finish()
-            }
-            R.id.photoChange -> {
-                var intent = Intent(Intent.ACTION_PICK)
-                intent.setType(MediaStore.Images.Media.CONTENT_TYPE)
-                startActivityForResult(intent, 1)
             }
         }
     }

@@ -28,9 +28,6 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     val userName :LiveData<String> = _userName
     val userImg : LiveData<String> = _userImg
 
-    fun getFireStation(x : Double, y : Double): LiveData<List<FireStationData>> {
-        return homeRepository.getFireStation(x, y)
-    }
 
     fun setUserInfo(fcmToken : String, UUID : String): LiveData<String> {
         return homeRepository.setUserData(fcmToken, UUID)

@@ -22,25 +22,6 @@ class HomeRepository(var application: Application) {
     private val service = retrofit.create(RetrofitInterface::class.java)
     val message =  MutableLiveData<String>()
 
-    fun getFireStation(x : Double, y : Double):LiveData<List<FireStationData>>{
-        val data = MutableLiveData<List<FireStationData>>()
-        val info = hashMapOf(
-            "x" to x.toString(),
-            "y" to y.toString()
-        )
-        service.getFireStation(info).enqueue(object : Callback<FireStationDTO> {
-            override fun onResponse(call: Call<FireStationDTO>, response: Response<FireStationDTO>) {
-                if(response.code()==200){
-                    data.value = response.body()?.result
-                }
-            }
-            override fun onFailure(call: Call<FireStationDTO>, t: Throwable) {
-                Log.e("Error", t.message.toString())
-            }
-        })
-        return data
-    }
-
     fun setUserData(fcmToken : String, UUID : String):LiveData<String>{
         var userInfoData = UserInfoData(application)
         val data = MutableLiveData<String>()

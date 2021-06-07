@@ -71,7 +71,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.85" />
+            app:layout_constraintGuide_percent="0.9" />
 
         <TextView
             android:id="@+id/titleTxt"
@@ -126,7 +126,7 @@
             tools:text="dh97k@naver.com" />
 
         <TextView
-            android:id="@+id/genderEdit"
+            android:id="@+id/userPosition"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
@@ -136,6 +136,19 @@
             app:layout_constraintEnd_toEndOf="@id/navi_guideline5"
             app:layout_constraintStart_toStartOf="@id/navi_guideline1"
             app:layout_constraintTop_toBottomOf="@id/emailEdit"
+            tools:text="병천119안전센터" />
+
+        <TextView
+            android:id="@+id/genderEdit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:fontFamily="@font/cookierun_bold"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="@id/navi_guideline5"
+            app:layout_constraintStart_toStartOf="@id/navi_guideline1"
+            app:layout_constraintTop_toBottomOf="@id/userPosition"
             tools:text="M" />
 
         <ImageView
@@ -161,17 +174,12 @@
             app:layout_constraintEnd_toEndOf="@id/navi_guideline6"
             app:layout_constraintTop_toBottomOf="@id/navi_guideline7"/>
 
-        <TextView
-            android:id="@+id/photoChange"
+        <ImageView
+            android:id="@+id/changeBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/setting_icon"
-            android:drawablePadding="10dp"
-            android:fontFamily="@font/cookierun_bold"
+            android:src="@drawable/setting_icon"
             android:gravity="center_vertical"
-            android:text="사진변경"
-            android:textColor="@color/white"
-            android:textSize="18dp"
             app:layout_constraintStart_toStartOf="@id/navi_guideline1"
             app:layout_constraintTop_toBottomOf="@id/navi_guideline8"/>
 

@@ -23,7 +23,7 @@ interface RetrofitInterface{
     fun getLocation(@Header("Authorization") authHeader: String, @QueryMap data: HashMap<String, String>):Call<CurrentLocationDTO>
 
     @GET ("/user/find/firestation")
-    fun getFireStation(@Body data : HashMap<String, String>): Call<FireStationDTO>
+    fun getFireStation(@QueryMap data : HashMap<String, String>): Call<FireStationDTO>
 
     @Multipart
     @POST("/user/modify/image")
