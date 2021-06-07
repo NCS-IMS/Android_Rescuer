@@ -17,4 +17,7 @@ class ChangePositionViewModel(application: Application):AndroidViewModel(applica
     fun getFireStation(): LiveData<List<FireStationData>>{
         return changePositionRepository.getFireStation()
     }
+    fun setFireStatinID(kakaoId : String, fireStationId: String):LiveData<String>{
+        return changePositionRepository.setFireStatinID(kakaoId, fireStationId)
+    }
 }

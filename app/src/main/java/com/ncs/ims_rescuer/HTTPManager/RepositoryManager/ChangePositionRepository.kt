@@ -5,10 +5,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.ncs.ims_rescuer.GISManager.GetMylocation
-import com.ncs.ims_rescuer.HTTPManager.DTOManager.AddressData
-import com.ncs.ims_rescuer.HTTPManager.DTOManager.CurrentLocationDTO
-import com.ncs.ims_rescuer.HTTPManager.DTOManager.FireStationDTO
-import com.ncs.ims_rescuer.HTTPManager.DTOManager.FireStationData
+import com.ncs.ims_rescuer.HTTPManager.DTOManager.*
 import com.ncs.ims_rescuer.HTTPManager.RetrofitAPI
 import com.ncs.ims_rescuer.HTTPManager.RetrofitInterface
 import com.ncs.ims_rescuer.HTTPManager.Tools
@@ -59,6 +56,25 @@ class ChangePositionRepository(var application: Application) {
                 }
             }
             override fun onFailure(call: Call<FireStationDTO>, t: Throwable) {
+                Log.e("Errors", t.cause.toString())
+            }
+        })
+        return data
+    }
+
+    fun setFireStatinID(kakaoId: String, fireStationId: String):LiveData<String>{
+        val data = MutableLiveData<String>()
+        var info = hashMapOf(
+            "kakaoId" to kakaoId,
+            "fireStationId" to fireStationId
+        )
+        service[0].setFireStatinID(info).enqueue(object : Callback<PublicDTO>{
+            override fun onResponse(call: Call<PublicDTO>, response: Response<PublicDTO>){
+                if(response.code()== 200){
+                    data.value = response.body()?.message
+                }
+            }
+            override fun onFailure(call: Call<PublicDTO>, t: Throwable) {
                 Log.e("Errors", t.cause.toString())
             }
         })

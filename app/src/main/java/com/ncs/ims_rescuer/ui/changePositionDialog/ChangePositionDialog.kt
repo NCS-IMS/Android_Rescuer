@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
@@ -149,10 +150,14 @@ class ChangePositionDialog(context: Context, var userPosition: TextView): Dialog
                 }
             }
             find_fireStation.saveUserPosition.id->{
-                userInfoData.setFireStationId(find_fireStation.stationtId.text.toString())
-                userInfoData.setFireStationName(find_fireStation.stationName.text.toString())
-                userPosition.text = find_fireStation.stationName.text.toString()
-                dismiss()
+                changePositionViewModel.setFireStatinID(userInfoData.getUserData()["USER_ID"].toString(), find_fireStation.stationtId.text.toString())
+                    .observe(viewLifecycleOwner,{
+                        userInfoData.setFireStationId(find_fireStation.stationtId.text.toString())
+                        userInfoData.setFireStationName(find_fireStation.stationName.text.toString())
+                        userPosition.text = find_fireStation.stationName.text.toString()
+                        Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+                        dismiss()
+                    })
             }
         }
     }

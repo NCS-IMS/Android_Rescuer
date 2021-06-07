@@ -29,4 +29,6 @@ interface RetrofitInterface{
     @POST("/user/modify/image")
     fun updateImage(@Part postImg: MultipartBody.Part, @PartMap data : HashMap<String, RequestBody>):Call<PublicDTO>
 
+    @POST("/user/modify/fsid")
+    fun setFireStatinID(@Body data : HashMap<String, String>):Call<PublicDTO>
 }
