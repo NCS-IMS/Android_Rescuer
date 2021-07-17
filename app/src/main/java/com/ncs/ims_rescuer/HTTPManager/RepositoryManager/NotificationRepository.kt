@@ -31,6 +31,7 @@ class NotificationRepository(var application: Application) {
         service[0].getUserlog(info).enqueue(object : Callback<NotificationDTO>{
             override fun onResponse(call: Call<NotificationDTO>, response: Response<NotificationDTO>) {
                 if(response.code() == 200){
+                    Log.e("response", response.body().toString())
                     data.value = response.body()?.result
                 }else{
                     message.value = response.body()?.message

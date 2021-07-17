@@ -57,6 +57,7 @@ class NotificationsFragment : Fragment(), MapView.MapViewEventListener, View.OnC
         userInfoData = UserInfoData(requireContext())
 
         gps = GetMylocation().getLocation(requireContext())
+        Log.e("gps", gps.toString())
         map_view = MapView(requireActivity())
         notificationsBinding.mapView.addView(map_view)
         setCurrentLocation() //현재 위치표시

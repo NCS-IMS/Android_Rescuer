@@ -31,7 +31,7 @@ data class NotificationData(
         @SerializedName("medicine")
         var medicine : String,
         @SerializedName("createDate")
-        var createDate : String,
+        var createDate : String?,
         @SerializedName("updateDate")
         var updateDate : String
 )

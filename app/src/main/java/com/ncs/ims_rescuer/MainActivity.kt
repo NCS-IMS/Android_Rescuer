@@ -8,6 +8,7 @@ import android.bluetooth.le.AdvertiseSettings
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
@@ -26,8 +27,11 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.signature.ObjectKey
-import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.messaging.FirebaseMessaging
+import com.kakao.sdk.navi.NaviClient
+import com.kakao.sdk.navi.model.CoordType
+import com.kakao.sdk.navi.model.Location
+import com.kakao.sdk.navi.model.NaviOption
 import com.ncs.imsUser.SaveDataManager.UserInfoData
 import com.ncs.ims_rescuer.HTTPManager.RepositoryManager.MainRepository
 import com.ncs.ims_rescuer.SaveDataManager.ApplicationSetting
@@ -113,14 +117,14 @@ class MainActivity : AppCompatActivity(), AnimatedBottomBar.OnTabInterceptListen
     }
 
     private fun initFirebase() {
-        FirebaseInstanceId.getInstance().instanceId
+        FirebaseMessaging.getInstance().token
             .addOnCompleteListener { task ->
                 if (!task.isSuccessful) {
                     Log.d("Firebase", "getInstanceId failed", task.exception)
                     return@addOnCompleteListener
                 }
                 // Get new Instance ID token
-                val token = task.result!!.token
+                val token = task.result!!
                 FirebaseMessaging.getInstance()
                     .subscribeToTopic(resources.getString(R.string.default_notification_channel_name))
                 // Log and toast
@@ -310,6 +314,32 @@ class MainActivity : AppCompatActivity(), AnimatedBottomBar.OnTabInterceptListen
             }catch (e : IOException){
                 Toast.makeText(this, "파일 추출 실패", Toast.LENGTH_SHORT).show()
             }
+        }
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        startNavi(true)
+    }
+    private fun startNavi(isStart : Boolean = false){
+        Toast.makeText(this, "dsfds", Toast.LENGTH_LONG).show()
+        if(isStart){
+            /*if (NaviClient.instance.isKakaoNaviInstalled(requireContext())) {
+                Log.i("Navi Able", "카카오내비 앱으로 길안내 가능")
+                startActivity(
+                    NaviClient.instance.navigateIntent(
+                        Location(noticeData.emAddr, noticeData.longitude, noticeData.latitude),
+                        NaviOption(coordType = CoordType.WGS84)
+                    )
+                )
+            } else { //카카오 네비가 설치 되어 있지 않으면 설치 페이지로 이동
+                Log.i("Navi Disable", "카카오내비 미설치: 웹 길안내 사용 권장")
+                val intent = Intent(Intent.ACTION_VIEW)
+                intent.addCategory(Intent.CATEGORY_DEFAULT)
+                intent.data = Uri.parse("market://details?id=com.locnall.KimGiSa")
+                startActivity(intent)
+            }*/
         }
     }
 }

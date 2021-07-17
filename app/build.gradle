@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id 'com.google.gms.google-services'
 }
 
 android {
@@ -36,8 +37,7 @@ android {
         viewBinding true
     }
 }
-apply plugin: 'com.android.application'
-apply plugin: 'com.google.gms.google-services'
+
 
 dependencies {
 
@@ -57,7 +57,9 @@ dependencies {
     implementation 'nl.joery.animatedbottombar:library:1.0.9'
 
     //FCM Library
-    implementation 'com.google.firebase:firebase-messaging:20.1.6'
+    implementation platform('com.google.firebase:firebase-bom:28.2.1')
+    implementation 'com.google.firebase:firebase-messaging-ktx'
+    implementation 'com.google.firebase:firebase-analytics-ktx'
 
     //타임라인 라이브러리
     implementation 'com.github.sangcomz:StickyTimeLine:v0.1.1'

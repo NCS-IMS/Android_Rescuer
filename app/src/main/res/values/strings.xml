@@ -7,6 +7,7 @@
     <!-- push Message Service -->
     <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
     <string name="default_notification_channel_name" translatable="false">test</string>
+    <string name="default_notification_channel_description" translatable="false">응급호출을 위한 채널</string>
 
     <string name="kakao_app_key">c6ab6b684619048f988bc24225528003</string>
     <string name="kakao_restapi_key">9bd6eab13235a8a6ba5bf314f576749b</string>
